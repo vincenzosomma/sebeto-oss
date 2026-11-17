@@ -23,8 +23,11 @@ export interface SecurityOptions {
 
 const WILDCARD_HOSTS = new Set(['0.0.0.0', '::', '[::]', '']);
 
+/** Domain label, so these digests are never equal to a plain SHA-256 of the token used elsewhere. */
+const TOKEN_DIGEST_LABEL = 'tkc:htzw.6yebxr';
+
 function sha256(s: string): Buffer {
-  return createHash('sha256').update(s, 'utf8').digest();
+  return createHash('sha256').update(TOKEN_DIGEST_LABEL).update(s, 'utf8').digest();
 }
 
 /** Constant-time token comparison (hashing first equalises lengths). */

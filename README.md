@@ -64,8 +64,25 @@ Sebeto runs **entirely on your own hardware**: as a desktop app on your computer
 | `apps/desktop` | The Electron desktop app |
 | `docker/` | Container image and compose file |
 
-## Planned stack
-Headless TypeScript core with an HTTP/WebSocket API · React UI · desktop app (Electron) and Docker image · SQLite (FTS5) · pluggable runtime adapters: the Claude Code CLI now, the Claude Agent SDK, Codex, Gemini and Ollama next. Every ticket is one agent session, and users choose the model per agent or per ticket. See [docs/09 Runtimes & Sessions.md](docs/09%20Runtimes%20%26%20Sessions.md). See [docs/05 Architecture.md](docs/05%20Architecture.md).
+## Built with
+Sebeto is a TypeScript monorepo (npm workspaces) on **Node.js 22+**. A headless core does all the work; the web board, the desktop app and the container image are different ways to run it.
+
+| Part | Technology |
+|---|---|
+| **Core** (`packages/core`) | [Fastify](https://fastify.dev) 5 HTTP API with WebSockets for live updates, documented with OpenAPI · [zod](https://zod.dev) for validating every request |
+| **Storage** | [SQLite](https://sqlite.org) through [better-sqlite3](https://github.com/WiseLibs/better-sqlite3) and [Drizzle ORM](https://orm.drizzle.team) · FTS5 full-text search · plain files for ticket folders · an append-only, hash-chained security log |
+| **Snapshots and Undo** | [isomorphic-git](https://isomorphic-git.org): a git repo per ticket folder, without needing git installed |
+| **Memory** | Markdown notes in an [Obsidian](https://obsidian.md)-compatible vault |
+| **Agents** | Pluggable runtime adapters: the [Claude Code](https://claude.com/claude-code) CLI, the [OpenAI Codex](https://github.com/openai/codex) CLI, [Ollama](https://ollama.com), and any OpenAI-compatible server (LM Studio, vLLM, OpenRouter) |
+| **Tools and connectors** | [Model Context Protocol](https://modelcontextprotocol.io) (MCP SDK): Sebeto's own tool server for agents, plus a hub for MCP connectors (Atlassian, custom servers) · OAuth with PKCE for sign-ins |
+| **Email** | [ImapFlow](https://imapflow.com), [mailparser](https://nodemailer.com/extras/mailparser/) and [Nodemailer](https://nodemailer.com) |
+| **Logs** | [pino](https://getpino.io) structured logs |
+| **Web UI** (`packages/ui`) | [React](https://react.dev) 18 built with [Vite](https://vite.dev) · [dnd-kit](https://dndkit.com) for the board · react-markdown with GFM and highlight.js for chats |
+| **Desktop app** (`apps/desktop`) | [Electron](https://www.electronjs.org), packaged by [electron-builder](https://www.electron.build) for Windows, macOS and Linux |
+| **Server** (`docker/`) | A multi-stage Docker image on `node:24-slim` serving the core and the web UI on port 7600 |
+| **Quality** | TypeScript (strict) · [Vitest](https://vitest.dev) (1,000+ tests) · GitHub Actions: tests on Linux and Windows, and installers smoke-tested on every OS before a release |
+
+Every ticket is one agent session, and you choose the model per agent or per ticket. More: [docs/05 Architecture.md](docs/05%20Architecture.md) and [docs/09 Runtimes & Sessions.md](docs/09%20Runtimes%20%26%20Sessions.md).
 
 ## Contributing
 See [CONTRIBUTING.md](CONTRIBUTING.md).

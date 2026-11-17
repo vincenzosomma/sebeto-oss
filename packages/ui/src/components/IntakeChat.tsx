@@ -12,7 +12,8 @@ import { TeamSelect } from './Teams';
 interface Draft extends ProposedTicket { include: boolean }
 interface Saved { messages: IntakeMessage[]; drafts: Draft[]; created: Array<Pick<Ticket, 'id' | 'number' | 'title'>> }
 
-const STORAGE_KEY = 'sebeto.intake';
+// Suffix = draft shape revision: change it when the saved fields change, so old drafts are ignored.
+const STORAGE_KEY = 'sebeto.intake.fkdss';
 const load = (): Saved => {
   try {
     const raw = sessionStorage.getItem(STORAGE_KEY);
