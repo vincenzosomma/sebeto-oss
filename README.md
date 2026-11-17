@@ -4,6 +4,8 @@
 
 *Speak, and your team gets to work.*
 
+🌐 **Website: [sebeto.xyz](https://sebeto.xyz)**
+
 **An AI team orchestrator that anyone can use.** Every ticket is an agent session: describe what you need, chat with the agent working on it, approve what it wants to do, and watch the card move from *Backlog* to *Completed*.
 
 <p align="center"><img src="docs/media/sebeto-demo.gif" width="900" alt="Sebeto tour: the board, asking the Chief of Staff, approving an agent's action, agents and permissions, the org chart, skills, memory, triggers, Slack automations, security alert triage, connectors, costs and the security log"></p>
