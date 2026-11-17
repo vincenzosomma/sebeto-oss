@@ -170,6 +170,34 @@ jobs:
           if-no-files-found: error
           retention-days: 3
 
+  release:
+    name: GitHub release
+    # A v* tag: after the tests and the three installers pass, publish them as a release.
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [test, windows-installer, linux-packages, macos-package]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v7
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Release notes from CHANGELOG.md
+        run: |
+          v="${GITHUB_REF_NAME#v}"
+          awk -v v="$v" '$0 ~ "^## \\[" v "\\]" {on=1; next} on && /^## \[/ {exit} on {print}' CHANGELOG.md > notes.md
+          test -s notes.md || { echo "No CHANGELOG.md section for $v"; exit 1; }
+          cat notes.md
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ls -l dist
+          pre=""; case "$GITHUB_REF_NAME" in v0.*|*-*) pre="--prerelease";; esac
+          gh release create "$GITHUB_REF_NAME" dist/* --title "Sebeto $GITHUB_REF_NAME" --notes-file notes.md $pre
+
   docker:
     name: Docker image
     runs-on: ubuntu-latest

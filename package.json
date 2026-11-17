@@ -1,7 +1,7 @@
 {
   "name": "sebeto",
   "private": true,
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "Sebeto: an open-source AI team orchestrator anyone can use.",
   "license": "MIT",
   "type": "module",
