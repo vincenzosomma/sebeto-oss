@@ -1,0 +1,17 @@
+**/node_modules
+**/dist
+**/release
+**/out
+**/coverage
+**/*.tsbuildinfo
+**/*.log
+.git
+.github
+.obsidian
+.env
+.env.*
+docs
+design
+docker/secrets
+docker/workspace
+apps/desktop/src

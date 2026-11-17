@@ -1,0 +1,261 @@
+/*
+ * Sebeto design tokens (docs/12 Brand.md).
+ *
+ * Two themes, one mechanism: `<html data-theme="light|dark">`. The attribute always holds the
+ * *resolved* theme: index.html sets it before first paint (from the saved choice, or the system
+ * setting for "Same as the system") and lib/theme.ts keeps it in sync, including live OS changes.
+ * `:root` is the light theme; `:root[data-theme="dark"]` overrides only what differs.
+ *
+ * Every colour used by app.css and the components lives here. lib/contrast.test.ts reads this file
+ * and checks the WCAG AA pairs (4.5:1 text, 3:1 UI borders/graphics) in both themes.
+ */
+:root {
+  color-scheme: light;
+
+  /* Brand */
+  --gulf-blue: #0E5A8A;   /* primary: buttons, links, selection, In progress */
+  --deep-sea: #0A4468;    /* headings, hover/pressed */
+  --sea-mist: #E3EEF5;    /* user bubbles, light highlights */
+  --tuff-yellow: #E2B64E; /* accent: fill behind dark text only, never text on white */
+  --tuff-light: #F7EDD3;  /* soft accent backgrounds */
+  --lava-ink: #1C1C1A;    /* text */
+
+  /* Roles built on the brand */
+  --primary-hover: var(--deep-sea);
+  --on-primary: #FFFFFF;      /* text/icons on a gulf-blue or deep-sea fill */
+  --on-tuff: #1C1C1A;         /* text on a tuff-yellow fill (dark in both themes) */
+  --tuff-hover: #D6A73B;
+  --sea-mist-hover: #D3E4EF;
+  --sea-border: #BCD3E3;
+  --sea-border-strong: #9DB8CB;
+  --sea-faint: #F7FAFC;
+  --inverse-bg: var(--lava-ink);
+  --inverse-text: #FFFFFF;
+
+  /* Neutrals */
+  --bg: #F6F6F3;
+  --surface: #FFFFFF;
+  --surface-2: #F1F1EE;
+  --surface-3: #EFEFEC;
+  --surface-sunken: #FAFAF8;
+  --column-bg: var(--surface-3);      /* board columns (cards sit on them) */
+  --nav-hover: var(--surface-2);
+  --nav-active-bg: var(--surface-3);
+  --nav-active-text: var(--text);
+  --nav-active-bar: transparent;
+  --border: #E4E4DF;
+  --border-strong: #D6D6D0;
+  --border-input: #8E8E88;  /* form-control outlines: 3:1 on the surfaces */
+  --border-dashed: #B9B9B2;
+  --line: #C3CED6;          /* org chart connectors */
+  --text: var(--lava-ink);
+  --text-2: #45453F;
+  --text-muted: #5F5F5A; /* 6.4:1 on white */
+  --text-placeholder: #6E6E68;
+  --text-disabled: #9A9A94;
+
+  /* Status */
+  --status-backlog: #8A8A85;
+  --status-in_progress: #0E5A8A;
+  --status-needs_you: #B45309;
+  --status-blocked: #9B1C1C;
+  --status-done: #2E7D4F;
+  --on-status: #FFFFFF;   /* text on a status / kind fill */
+  /* Status text variants that pass 4.5:1 on white and on their tint */
+  --status-backlog-text: #5F5F5A;
+  --needs-you-text: #8A4207;
+  --needs-you-tint: #FDF3E7;
+  --needs-you-border: #E3B27A;
+  --warn-text: #6B3606;
+  --blocked-tint: #FBEAEA;
+  --blocked-text: #7A1616;
+  --danger-hover: #7A1616;
+  --done-text: #1F5C38;
+  --done-tint: #E3F2E8;
+  --done-border: #B9D9C5;
+
+  /* Memory graph: one colour per note kind; edges */
+  --mk-system: #0E5A8A;
+  --mk-app: #6B4FA0;
+  --mk-cve: #9B1C1C;
+  --mk-runbook: #2E7D4F;
+  --mk-decision: #B45309;
+  --mk-person: #A23E6E;
+  --mk-ticket: #5F5F5A;
+  --mk-note: #3B7C8C;
+  --graph-edge: #8E8E88;
+
+  /* Costs chart: categorical series (fixed order) and "other" */
+  --series-1: #0E5A8A;
+  --series-2: #C08A1E;
+  --series-3: #7A4FA0;
+  --series-4: #1F8A5B;
+  --series-5: #B5532C;
+  --series-other: #8A8A85;
+
+  /* Project / team palette (shared PROJECT_COLORS; lib/theme.ts entityColor) */
+  --pc-0e5a8a: #0E5A8A;
+  --pc-2e7d5b: #2E7D5B;
+  --pc-b5532c: #B5532C;
+  --pc-7a4fa0: #7A4FA0;
+  --pc-c08a1e: #C08A1E;
+  --pc-3b6e8f: #3B6E8F;
+  --pc-8a3b5e: #8A3B5E;
+  --pc-4f6b2e: #4F6B2E;
+
+  /* Code blocks are dark in both themes */
+  --code-inline-bg: rgba(10, 68, 104, 0.08);
+  --code-bg: #0F2533;
+  --code-border: #0A4468;
+  --code-head-bg: #0A4468;
+  --code-head-text: #CFE3F0;
+  --code-text: #E6EEF3;
+  --code-btn-text: #FFFFFF;
+  --code-btn-border: rgba(255, 255, 255, 0.35);
+  --code-btn-hover: rgba(255, 255, 255, 0.12);
+  --hl-comment: #8AA4B5;
+  --hl-keyword: #E2B64E;
+  --hl-string: #9FD8A8;
+  --hl-number: #F2A07B;
+  --hl-variable: #8FD0F5;
+  --hl-title: #FFFFFF;
+  --hl-meta: #B9CDDA;
+  --hl-deletion: #FF9C9C;
+  --hl-addition: #9FD8A8;
+
+  /* Overlays and shadows */
+  --scrim: rgba(28, 28, 26, 0.3);
+  --backdrop: rgba(10, 30, 45, 0.35);
+  --wizard-backdrop: linear-gradient(160deg, rgba(10, 68, 104, 0.78), rgba(14, 90, 138, 0.62));
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-pop: 0 10px 30px rgba(10, 68, 104, 0.18);
+  --shadow-dialog: 0 16px 48px rgba(10, 68, 104, 0.18);
+  --shadow-wizard: 0 24px 64px rgba(10, 68, 104, 0.28);
+  --shadow-toggle: 0 1px 2px rgba(10, 68, 104, 0.16);
+  --shadow-active: 0 4px 14px rgba(14, 90, 138, 0.14);
+  --focus: 0 0 0 3px rgba(14, 90, 138, 0.45);
+
+  /* Type */
+  --font-ui: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-brand: 'Manrope', 'Inter', system-ui, sans-serif;
+
+  /* Shape */
+  --radius-sm: 6px;
+  --radius: 8px;
+  --radius-lg: 10px;
+  --radius-pill: 999px;
+
+  --touch: 44px;
+  --sidebar-w: 288px;
+  --panel-w: 440px;
+}
+
+/* Dark theme: dark sea blues (never pure black); gulf blue turns into a lighter tint for links and
+   buttons; tuff yellow stays a fill behind dark text. */
+:root[data-theme="dark"] {
+  /* Dark = Hack The Box style (owner's request, 2026-11-14): navy "node black" backgrounds,
+     lime green as the primary colour, hacker grey text, azure / orange / red / aquamarine status. */
+  color-scheme: dark;
+
+  --gulf-blue: #9FEF00;   /* primary role: lime green */
+  --deep-sea: #FFFFFF;    /* headings */
+  --sea-mist: #233A2A;    /* lime tint: user bubbles, selection */
+  --tuff-yellow: #9FEF00; /* main call-to-action is lime too (Hack The Box style) */
+  --tuff-light: #2A3A1C;
+
+  --primary-hover: #B8F53D;
+  --on-primary: #141D2B;
+  --tuff-hover: #B8F53D;
+  --sea-mist-hover: #2C4733;
+  --sea-border: #3E5C2A;
+  --sea-border-strong: #567D33;
+  --sea-faint: #172433;
+  --inverse-bg: #E6EDF7;
+  --inverse-text: #141D2B;
+
+  --bg: #141D2B;
+  --surface: #1A2332;
+  --surface-2: #212D3F;
+  --surface-3: #283548;
+  --surface-sunken: #111927;
+  --column-bg: #111927;      /* columns darker than the cards on them */
+  --nav-hover: #1F2A3B;
+  --nav-active-bg: #233A2A;   /* lime tint */
+  --nav-active-text: #9FEF00;
+  --nav-active-bar: #9FEF00;
+  scrollbar-color: #3A4860 #111927;
+  --border: #2A3649;
+  --border-strong: #354357;
+  --border-input: #6A7890;
+  --border-dashed: #435169;
+  --line: #44536B;
+  --text: #FFFFFF;
+  --text-2: #C5D1EB;
+  --text-muted: #A4B1CD;
+  --text-placeholder: #8C9AB6;
+  --text-disabled: #5B6880;
+
+  --status-backlog: #8896B0;
+  --status-in_progress: #5AA9FF;
+  --status-needs_you: #FFAF00;
+  --status-blocked: #FF6B6B;
+  --status-done: #2EE7B6;
+  --on-status: #141D2B;
+  --status-backlog-text: #A4B1CD;
+  --needs-you-text: #FFC24D;
+  --needs-you-tint: #3A2F14;
+  --needs-you-border: #8A6512;
+  --warn-text: #FFD27A;
+  --blocked-tint: #3D1E25;
+  --blocked-text: #FF9A9A;
+  --danger-hover: #FF9A9A;
+  --done-text: #5CF0C8;
+  --done-tint: #133A35;
+  --done-border: #1F6E5E;
+
+  --mk-system: #5AA9FF;
+  --mk-app: #C77DFF;
+  --mk-cve: #FF6B6B;
+  --mk-runbook: #2EE7B6;
+  --mk-decision: #FFAF00;
+  --mk-person: #FF7EB6;
+  --mk-ticket: #A4B1CD;
+  --mk-note: #9FEF00;
+  --graph-edge: #6F809B;
+
+  --series-1: #9FEF00;
+  --series-2: #5AA9FF;
+  --series-3: #FFAF00;
+  --series-4: #C77DFF;
+  --series-5: #2EE7B6;
+  --series-other: #8896B0;
+
+  --pc-0e5a8a: #5AA9FF;
+  --pc-2e7d5b: #2EE7B6;
+  --pc-b5532c: #FF8A5B;
+  --pc-7a4fa0: #C77DFF;
+  --pc-c08a1e: #FFAF00;
+  --pc-3b6e8f: #7FB2E5;
+  --pc-8a3b5e: #FF7EB6;
+  --pc-4f6b2e: #9FEF00;
+
+  --code-inline-bg: rgba(159, 239, 0, 0.12);
+  --code-bg: #0D141F;
+  --code-border: #2A3649;
+  --code-head-bg: #111927;
+  --hl-keyword: #9FEF00;
+  --hl-string: #2EE7B6;
+  --hl-variable: #5AA9FF;
+
+  --scrim: rgba(5, 9, 15, 0.6);
+  --backdrop: rgba(5, 9, 15, 0.65);
+  --wizard-backdrop: linear-gradient(160deg, rgba(17, 25, 39, 0.94), rgba(26, 35, 50, 0.88));
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-pop: 0 10px 30px rgba(0, 0, 0, 0.5);
+  --shadow-dialog: 0 16px 48px rgba(0, 0, 0, 0.55);
+  --shadow-wizard: 0 24px 64px rgba(0, 0, 0, 0.6);
+  --shadow-toggle: 0 1px 2px rgba(0, 0, 0, 0.45);
+  --shadow-active: 0 4px 14px rgba(0, 0, 0, 0.4);
+  --focus: 0 0 0 3px rgba(159, 239, 0, 0.5);
+}
+

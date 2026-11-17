@@ -1,0 +1,20 @@
+{
+  "receiver": "sebeto",
+  "status": "resolved",
+  "orgId": 1,
+  "alerts": [
+    {
+      "status": "resolved",
+      "labels": {
+        "alertname": "High CPU",
+        "instance": "srv-app03"
+      },
+      "annotations": {},
+      "fingerprint": "d4e5f60718293a4b"
+    }
+  ],
+  "groupKey": "{}/{}:{alertname=\"High CPU\"}",
+  "title": "[RESOLVED] High CPU Servers (srv-app03 warning)",
+  "state": "ok",
+  "message": "**Resolved**"
+}

@@ -1,0 +1,48 @@
+{
+  "name": "@sebeto/core",
+  "version": "0.8.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "bin": {
+    "sebeto-core": "dist/main.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node scripts/copy-migrations.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.test.json",
+    "dev": "tsx watch src/main.ts",
+    "start": "node dist/main.js",
+    "db:generate": "drizzle-kit generate"
+  },
+  "dependencies": {
+    "@fastify/static": "^10.1.11",
+    "@fastify/websocket": "^11.0.0",
+    "@modelcontextprotocol/sdk": "^1.5.0",
+    "@sebeto/shared": "*",
+    "better-sqlite3": "^12.4.1",
+    "drizzle-orm": "^0.45.4",
+    "fastify": "^5.2.0",
+    "imapflow": "^2.11.0",
+    "isomorphic-git": "^1.29.0",
+    "mailparser": "^3.14.2",
+    "nodemailer": "^10.5.0",
+    "pino": "^9.6.0",
+    "yaml": "2.9.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/mailparser": "^3.9.0",
+    "@types/nodemailer": "^8.0.2",
+    "@types/ws": "^8.5.13",
+    "drizzle-kit": "^0.31.11",
+    "ws": "^8.18.0"
+  }
+}

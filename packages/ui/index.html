@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0E5A8A" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="description" content="Sebeto: AI team orchestrator. Speak, and your team gets to work." />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@700&display=swap" rel="stylesheet" />
+    <title>Sebeto</title>
+    <script>
+      /* Theme before first paint (no white flash). Same rules as src/lib/theme.ts: the saved
+         choice (localStorage, then the desktop app's), 'light' | 'dark'; otherwise the system. */
+      (function () {
+        var c = null, d = false;
+        try { c = localStorage.getItem('sebeto.theme'); } catch (e) {}
+        try { if (c !== 'light' && c !== 'dark' && c !== 'system' && window.sebetoDesktop) c = window.sebetoDesktop.theme; } catch (e) {}
+        try { d = window.matchMedia('(prefers-color-scheme: dark)').matches; } catch (e) {}
+        var t = c === 'light' || c === 'dark' ? c : d ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
+        if (t === 'dark') {
+          document.documentElement.style.backgroundColor = '#141D2B';
+          var m = document.querySelector('meta[name="theme-color"]');
+          if (m) m.setAttribute('content', '#141D2B');
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./src/main.tsx"></script>
+  </body>
+</html>

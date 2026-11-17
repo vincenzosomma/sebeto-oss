@@ -1,0 +1,21 @@
+node_modules/
+dist/
+target/
+.env
+.env.*
+*.log
+.DS_Store
+Thumbs.db
+.obsidian/workspace*.json
+out/
+release/
+apps/desktop/stage/
+*.exe
+*.blockmap
+*.tsbuildinfo
+.sebeto-dev/
+coverage/
+docker/secrets/
+
+# Claude Code local worktrees and settings
+.claude/

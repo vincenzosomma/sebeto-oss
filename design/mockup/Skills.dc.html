@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sebeto Agents and Skills</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F6F6F3}
+a{color:#0E5A8A}a:hover{color:#0A4468}
+button,input,select,textarea{font-family:inherit}
+button{cursor:pointer}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; flex-direction: column; background: #F6F6F3; color: #1C1C1A; font-family: Inter, system-ui, sans-serif; font-size: 14px; line-height: 1.45">
+
+  <header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 24px; border-bottom: 1px solid #E4E4DF; background: #FFFFFF">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px">
+      <div style="display: flex; align-items: center; gap: 8px">
+        <svg width="30" height="30" viewBox="0 0 48 48" role="img" aria-label="Sebeto logo"><path d="M4 24C10 14.5 19 10 30 10a14 14 0 0 1 0 28C19 38 10 33.5 4 24Z" fill="#0E5A8A"></path><circle cx="13" cy="24" r="3" fill="#E2B64E"></circle><path d="M18 24H40M18 24c8 0 9-7.5 19.5-7.5M18 24c8 0 9 7.5 19.5 7.5" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round"></path></svg>
+        <span style="font-family: Manrope, Inter, sans-serif; font-weight: 700; font-size: 20px; letter-spacing: -0.04em; color: #0A4468">sebeto</span>
+      </div>
+      <nav aria-label="Sections" style="display: flex; flex-wrap: wrap; gap: 4px">
+        <a href="Main.dc.html" style="font-size: 16px; font-weight: 600; color: #5F5F5A; text-decoration: none; padding: 6px 10px; border-radius: 8px">Board</a>
+        <a href="Team.dc.html" style="font-size: 16px; font-weight: 600; color: #5F5F5A; text-decoration: none; padding: 6px 10px; border-radius: 8px">Agents team</a>
+        <a href="Skills.dc.html" aria-current="page" style="font-size: 16px; font-weight: 700; color: #1C1C1A; text-decoration: none; padding: 6px 10px; border-radius: 8px; background: #F7EDD3; box-shadow: inset 0 -3px 0 #E2B64E">Agents &amp; skills</a>
+      </nav>
+    </div>
+    <div style="font-size: 13px; color: #5F5F5A">{{agentCount}} agents · {{skillCount}} skills · skills are saved as portable SKILL.md folders</div>
+  </header>
+
+  <div style="display: flex; flex-wrap: wrap; flex: 1; gap: 0">
+
+    <!-- ===== HIERARCHY ===== -->
+    <section aria-label="Agent hierarchy" style="flex: 1 1 300px; min-width: 0; box-sizing: border-box; background: #FFFFFF; border-right: 1px solid #E4E4DF; padding: 20px 16px; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; align-items: center; justify-content: space-between">
+        <h2 style="margin: 0; font-size: 15px; font-weight: 700">Hierarchy</h2>
+        <button type="button" onClick="{{openNewAgent}}" style="height: 36px; padding: 0 12px; border: 0; border-radius: 8px; background: #E2B64E; color: #1C1C1A; font-weight: 600; font-size: 13px">+ New agent</button>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 8px; background: #F1F1EE">
+        <span style="width: 24px; height: 24px; border-radius: 50%; background: #0E5A8A; color: #FFFFFF; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center">V</span>
+        <span style="font-weight: 600">You</span><span style="font-size: 12px; color: #5F5F5A">Owner</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <sc-for list="{{tree}}" as="n" hint-placeholder-count="8">
+          <button type="button" onClick="{{n.pick}}" style="{{n.rowStyle}}">
+            <span style="color: #B9B9B2" aria-hidden="true">{{n.branch}}</span>
+            <span style="{{n.dotStyle}}" aria-hidden="true"></span>
+            <span style="font-weight: 600; color: #1C1C1A; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{n.name}}</span>
+            <span style="font-size: 11px; color: #45453F; background: #EFEFEC; border-radius: 999px; padding: 1px 7px">{{n.runtime}}</span>
+            <span style="font-size: 11px; color: #5F5F5A">{{n.skillCount}} skills</span>
+          </button>
+        </sc-for>
+      </div>
+      <div style="font-size: 12px; color: #5F5F5A; margin-top: auto">Reporting lines decide who can delegate to whom and who reviews whose work.</div>
+    </section>
+
+    <!-- ===== AGENT EDITOR / NEW AGENT ===== -->
+    <section aria-label="Agent details" style="flex: 2 1 460px; min-width: 0; box-sizing: border-box; padding: 20px 24px; display: flex; flex-direction: column; gap: 18px">
+
+      <sc-if value="{{showEditor}}" hint-placeholder-val="{{ true }}">
+        <div style="background: #FFFFFF; border: 1px solid #E4E4DF; border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 16px">
+          <div style="display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 12px">
+            <div style="display: flex; flex-direction: column; gap: 4px">
+              <div style="font-size: 12px; color: #5F5F5A">Reports to {{sel.reportsName}} · {{sel.directReports}}</div>
+              <h2 style="margin: 0; font-family: Manrope, Inter, sans-serif; font-size: 26px; font-weight: 700; letter-spacing: -0.02em">{{sel.name}}</h2>
+            </div>
+            <div style="display: flex; gap: 8px">
+              <span style="font-size: 12px; font-weight: 600; color: #FFFFFF; background: #0E5A8A; border-radius: 999px; padding: 4px 10px">{{sel.runtime}}</span>
+              <span style="font-size: 12px; color: #45453F; background: #EFEFEC; border-radius: 999px; padding: 4px 10px">{{sel.model}}</span>
+            </div>
+          </div>
+          <div style="font-size: 14px; color: #45453F; background: #FAFAF8; border: 1px solid #EFEFEC; border-radius: 10px; padding: 10px 12px">{{sel.job}}</div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px">
+            <div style="display: flex; align-items: baseline; justify-content: space-between">
+              <h3 style="margin: 0; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: #5F5F5A">Assigned skills</h3>
+              <span style="font-size: 12px; color: #5F5F5A">Assign from the library on the right</span>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px">
+              <sc-for list="{{selSkills}}" as="s" hint-placeholder-count="3">
+                <span style="display: inline-flex; align-items: center; gap: 6px; background: #E3EEF5; color: #0A4468; border-radius: 999px; padding: 4px 4px 4px 12px; font-size: 13px; font-weight: 600">
+                  {{s.name}}
+                  <button type="button" onClick="{{s.remove}}" aria-label="Remove skill {{s.name}}" style="width: 26px; height: 26px; border: 0; border-radius: 50%; background: #FFFFFF; color: #0A4468; display: flex; align-items: center; justify-content: center">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+                  </button>
+                </span>
+              </sc-for>
+              <sc-if value="{{noSelSkills}}" hint-placeholder-val="{{ false }}">
+                <span style="font-size: 13px; color: #5F5F5A">No skills yet. This agent only follows its job description.</span>
+              </sc-if>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px">
+            <h3 style="margin: 0; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: #5F5F5A">What these skills need</h3>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px">
+              <sc-for list="{{effPerms}}" as="p" hint-placeholder-count="3">
+                <span style="{{p.style}}">{{p.label}}</span>
+              </sc-for>
+            </div>
+            <div style="font-size: 12px; color: #5F5F5A">Permissions come from the skills. Anything marked “Ask” always waits for your approval on the ticket.</div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{showNewAgent}}" hint-placeholder-val="{{ false }}">
+        <form onSubmit="{{createAgent}}" style="background: #FFFFFF; border: 2px solid #0E5A8A; border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+          <div style="display: flex; align-items: center; justify-content: space-between">
+            <h2 style="margin: 0; font-family: Manrope, Inter, sans-serif; font-size: 22px; font-weight: 700">New agent</h2>
+            <button type="button" onClick="{{cancelNewAgent}}" style="height: 36px; padding: 0 12px; border: 1px solid #D6D6D0; border-radius: 8px; background: #FFFFFF; color: #1C1C1A; font-size: 13px">Cancel</button>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 12px; font-weight: 600; color: #45453F">Name
+              <input type="text" value="{{draft.name}}" onChange="{{onDraftName}}" placeholder="e.g. Network assistant" style="height: 40px; border: 1px solid #D6D6D0; border-radius: 8px; padding: 0 10px; font-size: 14px; font-weight: 400; color: #1C1C1A">
+            </label>
+            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 12px; font-weight: 600; color: #45453F">Reports to
+              <select value="{{draft.reportsTo}}" onChange="{{onDraftReports}}" style="height: 40px; border: 1px solid #D6D6D0; border-radius: 8px; padding: 0 8px; font-size: 14px; font-weight: 400; background: #FFFFFF; color: #1C1C1A">
+                <sc-for list="{{reportOptions}}" as="o" hint-placeholder-count="4">
+                  <option value="{{o.id}}">{{o.name}}</option>
+                </sc-for>
+              </select>
+            </label>
+            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 12px; font-weight: 600; color: #45453F">Runtime
+              <select value="{{draft.runtime}}" onChange="{{onDraftRuntime}}" style="height: 40px; border: 1px solid #D6D6D0; border-radius: 8px; padding: 0 8px; font-size: 14px; font-weight: 400; background: #FFFFFF; color: #1C1C1A">
+                <option value="Claude">Claude (Claude Code CLI)</option>
+                <option value="Codex">Codex CLI</option>
+                <option value="Gemini">Gemini CLI</option>
+                <option value="Ollama">Ollama (local, offline)</option>
+              </select>
+            </label>
+            <label style="display: flex; flex-direction: column; gap: 4px; font-size: 12px; font-weight: 600; color: #45453F">Check-in every
+              <select style="height: 40px; border: 1px solid #D6D6D0; border-radius: 8px; padding: 0 8px; font-size: 14px; font-weight: 400; background: #FFFFFF; color: #1C1C1A">
+                <option>15 min</option><option>30 min</option><option selected>1 h</option><option>2 h</option>
+              </select>
+            </label>
+          </div>
+          <label style="display: flex; flex-direction: column; gap: 4px; font-size: 12px; font-weight: 600; color: #45453F">Job description
+            <textarea onChange="{{onDraftJob}}" rows="3" placeholder="What this agent is responsible for, in plain words." style="border: 1px solid #D6D6D0; border-radius: 8px; padding: 8px 10px; font-size: 14px; font-weight: 400; resize: vertical; color: #1C1C1A">{{draft.job}}</textarea>
+          </label>
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+            <span style="font-size: 12px; color: #5F5F5A">After creating it, assign skills from the library.</span>
+            <button type="submit" style="height: 44px; padding: 0 18px; border: 0; border-radius: 10px; background: #0E5A8A; color: #FFFFFF; font-weight: 600; font-size: 14px">Create agent</button>
+          </div>
+          <sc-if value="{{draftError}}" hint-placeholder-val="{{ false }}">
+            <div style="font-size: 13px; color: #9B1C1C">Give the agent a name first.</div>
+          </sc-if>
+        </form>
+      </sc-if>
+    </section>
+
+    <!-- ===== SKILL LIBRARY ===== -->
+    <section aria-label="Skill library" style="flex: 1.4 1 380px; min-width: 0; box-sizing: border-box; background: #FFFFFF; border-left: 1px solid #E4E4DF; padding: 20px 16px; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; align-items: center; justify-content: space-between">
+        <h2 style="margin: 0; font-size: 15px; font-weight: 700">Skill library</h2>
+        <button type="button" onClick="{{toggleNewSkill}}" style="height: 36px; padding: 0 12px; border: 1px solid #D6D6D0; border-radius: 8px; background: #FFFFFF; color: #1C1C1A; font-weight: 600; font-size: 13px">{{newSkillLabel}}</button>
+      </div>
+
+      <sc-if value="{{showNewSkill}}" hint-placeholder-val="{{ false }}">
+        <form onSubmit="{{createSkill}}" style="display: flex; flex-direction: column; gap: 10px; border: 2px solid #0E5A8A; border-radius: 12px; padding: 14px">
+          <label style="display: flex; flex-direction: column; gap: 4px; font-size: 12px; font-weight: 600; color: #45453F">Skill name
+            <input type="text" value="{{skillDraft.name}}" onChange="{{onSkillName}}" placeholder="e.g. Backup restore test" style="height: 40px; border: 1px solid #D6D6D0; border-radius: 8px; padding: 0 10px; font-size: 14px; font-weight: 400">
+          </label>
+          <label style="display: flex; flex-direction: column; gap: 4px; font-size: 12px; font-weight: 600; color: #45453F">What it does
+            <input type="text" value="{{skillDraft.desc}}" onChange="{{onSkillDesc}}" placeholder="One sentence the agents will follow" style="height: 40px; border: 1px solid #D6D6D0; border-radius: 8px; padding: 0 10px; font-size: 14px; font-weight: 400">
+          </label>
+          <label style="display: flex; flex-direction: column; gap: 4px; font-size: 12px; font-weight: 600; color: #45453F">It needs permission to
+            <select value="{{skillDraft.perm}}" onChange="{{onSkillPerm}}" style="height: 40px; border: 1px solid #D6D6D0; border-radius: 8px; padding: 0 8px; font-size: 14px; font-weight: 400; background: #FFFFFF">
+              <sc-for list="{{permOptions}}" as="o" hint-placeholder-count="6">
+                <option value="{{o}}">{{o}}</option>
+              </sc-for>
+            </select>
+          </label>
+          <div style="font-size: 12px; color: #5F5F5A">Saved as <code>skills/&lt;name&gt;/SKILL.md</code> with instructions and optional files (templates, scripts). Claude reads it natively; other runtimes get it injected.</div>
+          <button type="submit" style="height: 40px; border: 0; border-radius: 8px; background: #0E5A8A; color: #FFFFFF; font-weight: 600">Add to library</button>
+        </form>
+      </sc-if>
+
+      <div style="display: flex; align-items: center; gap: 8px; border: 1px solid #D6D6D0; border-radius: 10px; padding: 0 12px; height: 40px; background: #FAFAF8">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5F5F5A" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+        <label for="skillsearch" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Search skills</label>
+        <input id="skillsearch" type="search" value="{{q}}" onChange="{{onQ}}" placeholder="Search skills" style="border: 0; outline: none; background: transparent; flex: 1; min-width: 0; font-size: 14px">
+      </div>
+      <div style="font-size: 12px; color: #5F5F5A">Assigning to: <strong style="color: #1C1C1A">{{assignTarget}}</strong></div>
+
+      <div style="display: flex; flex-direction: column; gap: 8px; overflow-y: auto">
+        <sc-for list="{{library}}" as="k" hint-placeholder-count="6">
+          <div style="{{k.cardStyle}}">
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 8px">
+              <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+                <span style="font-weight: 700">{{k.name}}</span>
+                <span style="font-size: 12px; color: #45453F">{{k.desc}}</span>
+              </div>
+              <button type="button" onClick="{{k.toggle}}" style="{{k.btnStyle}}">{{k.btnLabel}}</button>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px">
+              <span style="{{k.permStyle}}">{{k.perm}}</span>
+              <span style="font-size: 11px; color: #5F5F5A">Used by {{k.used}}</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1600,"height":1000}}'>
+var PERMS = ['Read only', 'Web read', 'Edit files', 'Send email (Ask)', 'Run scripts (Ask)', 'Change production (always Ask)'];
+var PERM_STYLE = {
+  'Read only': 'background:#EFEFEC;color:#45453F',
+  'Web read': 'background:#EFEFEC;color:#45453F',
+  'Edit files': 'background:#E3EEF5;color:#0A4468',
+  'Send email (Ask)': 'background:#FDF3E7;color:#6B3606',
+  'Run scripts (Ask)': 'background:#FDF3E7;color:#6B3606',
+  'Change production (always Ask)': 'background:#FBEAEA;color:#7A1616'
+};
+var MODEL = { Claude: 'Sonnet', Codex: 'GPT-5 Codex', Gemini: 'Gemini Pro', Ollama: 'Llama (local)' };
+
+var START_SKILLS = [
+  { id: 'triage', name: 'Ticket triage', desc: 'Turns a request into a clear ticket with goal, owner and deliverable.', perm: 'Read only' },
+  { id: 'routing', name: 'Routing & follow-up', desc: 'Assigns tickets to the right teammate and chases blocked work.', perm: 'Read only' },
+  { id: 'review', name: 'Work review', desc: 'Checks a teammate’s output against the ticket goal before it reaches you.', perm: 'Read only' },
+  { id: 'incident', name: 'Incident summary', desc: 'Groups incident exports by root cause, with examples.', perm: 'Read only' },
+  { id: 'notice', name: 'User notice writing', desc: 'Writes maintenance and change notices in plain language.', perm: 'Send email (Ask)' },
+  { id: 'kb', name: 'KB article writing', desc: 'Step-by-step knowledge base articles for end users.', perm: 'Edit files' },
+  { id: 'cve', name: 'CVE triage', desc: 'Matches new CVEs to your models and firmware and rates priority.', perm: 'Web read' },
+  { id: 'vendor', name: 'Vendor comparison', desc: 'Compares products on price, features and effort, citing sources.', perm: 'Web read' },
+  { id: 'inventory', name: 'Inventory cleanup', desc: 'Deduplicates and normalises asset spreadsheets.', perm: 'Edit files' },
+  { id: 'invreport', name: 'Inventory reporting', desc: 'Builds Excel reports from the asset inventory.', perm: 'Edit files' },
+  { id: 'runbook', name: 'Runbook organiser', desc: 'Names, sorts and updates runbooks.', perm: 'Edit files' },
+  { id: 'rollout', name: 'Rollout planning', desc: 'Phased rollout schedules with risks and user comms.', perm: 'Read only' },
+  { id: 'powershell', name: 'PowerShell scripting', desc: 'Writes scripts and tests them in a sandbox.', perm: 'Run scripts (Ask)' },
+  { id: 'certs', name: 'Certificate renewal', desc: 'Finds expiring certificates and renews them, staging first.', perm: 'Change production (always Ask)' }
+];
+var START_AGENTS = [
+  { id: 'cos', name: 'Chief of Staff', runtime: 'Claude', reportsTo: null, job: 'Turns your requests into tickets, assigns each one to the right teammate, and chases anything blocked or overdue.', skills: ['triage', 'routing'] },
+  { id: 'sdl', name: 'Service Desk Lead', runtime: 'Claude', reportsTo: 'cos', job: 'Reviews work from the Comms writer, Researcher and Analyst before it reaches you.', skills: ['review', 'incident'] },
+  { id: 'writer', name: 'Comms writer', runtime: 'Claude', reportsTo: 'sdl', job: 'Drafts user notices, change announcements and KB articles in plain language.', skills: ['notice', 'kb'] },
+  { id: 'research', name: 'Researcher', runtime: 'Gemini', reportsTo: 'sdl', job: 'Researches vendors, CVEs and documentation, and always lists sources.', skills: ['cve', 'vendor'] },
+  { id: 'analyst', name: 'Analyst', runtime: 'Claude', reportsTo: 'sdl', job: 'Turns ticket exports, logs and inventories into summaries and tables.', skills: ['incident', 'invreport'] },
+  { id: 'infra', name: 'Infrastructure Lead', runtime: 'Claude', reportsTo: 'cos', job: 'Owns servers, endpoints and inventory work, and checks the Sysadmin assistant’s changes.', skills: ['review', 'rollout'] },
+  { id: 'sysadmin', name: 'Sysadmin assistant', runtime: 'Claude', reportsTo: 'infra', job: 'Cleans inventories, organises runbooks and plans rollouts.', skills: ['inventory', 'runbook', 'rollout'] },
+  { id: 'auto', name: 'Automation engineer', runtime: 'Codex', reportsTo: 'cos', job: 'Writes and runs scripts. Tests in staging and never changes production without your approval.', skills: ['powershell', 'certs'] }
+];
+var RT_DOT = { Claude: '#0E5A8A', Codex: '#45453F', Gemini: '#2E7D4F', Ollama: '#B45309' };
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = {
+      agents: START_AGENTS, skills: START_SKILLS, selected: 'writer', mode: 'agent',
+      draft: { name: '', job: '', reportsTo: 'cos', runtime: 'Claude' }, draftError: false,
+      showNewSkill: false, skillDraft: { name: '', desc: '', perm: 'Read only' }, q: ''
+    };
+  }
+
+  renderVals() {
+    var self = this;
+    var st = this.state;
+    var agents = st.agents, skills = st.skills;
+    var byId = {}; agents.forEach(function (a) { byId[a.id] = a; });
+    var skillById = {}; skills.forEach(function (s) { skillById[s.id] = s; });
+
+    // hierarchy (depth-first)
+    var tree = [];
+    var walk = function (parentId, depth) {
+      var kids = agents.filter(function (a) { return a.reportsTo === parentId; });
+      kids.forEach(function (a, i) {
+        var isSel = st.mode === 'agent' && st.selected === a.id;
+        tree.push({
+          name: a.name, runtime: a.runtime, skillCount: a.skills.length,
+          branch: depth === 0 ? '' : (i === kids.length - 1 ? '└' : '├'),
+          dotStyle: 'width:8px;height:8px;border-radius:50%;flex:none;background:' + (RT_DOT[a.runtime] || '#8A8A85'),
+          rowStyle: 'display:flex;align-items:center;gap:8px;width:100%;text-align:left;min-height:40px;border-radius:8px;font-size:13px;padding:6px 10px 6px ' + (10 + depth * 18) + 'px;' +
+            (isSel ? 'background:#E3EEF5;border:1px solid #0E5A8A' : 'background:#FFFFFF;border:1px solid transparent'),
+          pick: function () { self.setState({ selected: a.id, mode: 'agent' }); }
+        });
+        walk(a.id, depth + 1);
+      });
+    };
+    walk(null, 0);
+
+    var sel = byId[st.selected] || agents[0];
+    var directReports = agents.filter(function (a) { return a.reportsTo === sel.id; }).length;
+    var selSkills = sel.skills.map(function (id) {
+      var s = skillById[id];
+      return { name: s ? s.name : id, remove: function () { self.toggleSkill(sel.id, id); } };
+    });
+    var permSet = {};
+    sel.skills.forEach(function (id) { if (skillById[id]) permSet[skillById[id].perm] = true; });
+    var effPerms = PERMS.filter(function (p) { return permSet[p]; }).map(function (p) {
+      return { label: p, style: 'font-size:12px;font-weight:600;border-radius:999px;padding:4px 10px;' + PERM_STYLE[p] };
+    });
+    if (effPerms.length === 0) effPerms = [{ label: 'No extra permissions', style: 'font-size:12px;border-radius:999px;padding:4px 10px;background:#EFEFEC;color:#45453F' }];
+
+    var q = (st.q || '').toLowerCase();
+    var library = skills.filter(function (s) { return !q || (s.name + ' ' + s.desc).toLowerCase().indexOf(q) >= 0; }).map(function (s) {
+      var assigned = sel.skills.indexOf(s.id) >= 0;
+      var used = agents.filter(function (a) { return a.skills.indexOf(s.id) >= 0; }).length;
+      return {
+        name: s.name, desc: s.desc, perm: s.perm, used: used === 1 ? '1 agent' : used + ' agents',
+        permStyle: 'font-size:11px;font-weight:600;border-radius:999px;padding:2px 8px;' + PERM_STYLE[s.perm],
+        cardStyle: 'display:flex;flex-direction:column;gap:8px;border-radius:10px;padding:12px;' + (assigned ? 'border:1px solid #0E5A8A;background:#F4F8FB' : 'border:1px solid #E4E4DF;background:#FFFFFF'),
+        btnLabel: assigned ? 'Assigned ✓' : 'Assign',
+        btnStyle: 'flex:none;height:32px;padding:0 12px;border-radius:8px;font-size:12px;font-weight:600;' + (assigned ? 'border:1px solid #0E5A8A;background:#FFFFFF;color:#0E5A8A' : 'border:0;background:#0E5A8A;color:#FFFFFF'),
+        toggle: function () { self.toggleSkill(sel.id, s.id); }
+      };
+    });
+
+    var setDraft = function (k) {
+      return function (e) { var d = Object.assign({}, self.state.draft); d[k] = e.target.value; self.setState({ draft: d, draftError: false }); };
+    };
+    var setSkill = function (k) {
+      return function (e) { var d = Object.assign({}, self.state.skillDraft); d[k] = e.target.value; self.setState({ skillDraft: d }); };
+    };
+
+    return {
+      agentCount: agents.length, skillCount: skills.length, tree: tree,
+      showEditor: st.mode === 'agent', showNewAgent: st.mode === 'new',
+      sel: {
+        name: sel.name, runtime: sel.runtime, model: MODEL[sel.runtime] || '', job: sel.job,
+        reportsName: sel.reportsTo ? byId[sel.reportsTo].name : 'You',
+        directReports: directReports === 0 ? 'no direct reports' : directReports + (directReports === 1 ? ' direct report' : ' direct reports')
+      },
+      selSkills: selSkills, noSelSkills: selSkills.length === 0, effPerms: effPerms,
+      assignTarget: sel.name,
+      openNewAgent: function () { self.setState({ mode: 'new', draft: { name: '', job: '', reportsTo: sel.id, runtime: 'Claude' } }); },
+      cancelNewAgent: function () { self.setState({ mode: 'agent' }); },
+      draft: st.draft, draftError: st.draftError,
+      reportOptions: agents.map(function (a) { return { id: a.id, name: a.name }; }),
+      onDraftName: setDraft('name'), onDraftJob: setDraft('job'), onDraftReports: setDraft('reportsTo'), onDraftRuntime: setDraft('runtime'),
+      createAgent: function (e) {
+        if (e && e.preventDefault) e.preventDefault();
+        var d = self.state.draft;
+        if (!d.name.trim()) { self.setState({ draftError: true }); return; }
+        var id = 'a' + Date.now();
+        var a = { id: id, name: d.name.trim(), runtime: d.runtime, reportsTo: d.reportsTo || 'cos', job: d.job.trim() || 'No job description yet.', skills: [] };
+        self.setState({ agents: self.state.agents.concat([a]), selected: id, mode: 'agent' });
+      },
+      showNewSkill: st.showNewSkill, newSkillLabel: st.showNewSkill ? 'Close' : '+ New skill',
+      toggleNewSkill: function () { self.setState({ showNewSkill: !self.state.showNewSkill }); },
+      skillDraft: st.skillDraft, permOptions: PERMS,
+      onSkillName: setSkill('name'), onSkillDesc: setSkill('desc'), onSkillPerm: setSkill('perm'),
+      createSkill: function (e) {
+        if (e && e.preventDefault) e.preventDefault();
+        var d = self.state.skillDraft;
+        if (!d.name.trim()) return;
+        var s = { id: 's' + Date.now(), name: d.name.trim(), desc: d.desc.trim() || 'Custom skill.', perm: d.perm };
+        self.setState({ skills: [s].concat(self.state.skills), showNewSkill: false, skillDraft: { name: '', desc: '', perm: 'Read only' } });
+      },
+      q: st.q, onQ: function (e) { self.setState({ q: e.target.value }); },
+      library: library
+    };
+  }
+
+  toggleSkill(agentId, skillId) {
+    var agents = this.state.agents.map(function (a) {
+      if (a.id !== agentId) return a;
+      var has = a.skills.indexOf(skillId) >= 0;
+      return Object.assign({}, a, { skills: has ? a.skills.filter(function (x) { return x !== skillId; }) : a.skills.concat([skillId]) });
+    });
+    this.setState({ agents: agents });
+  }
+}
+</script>
+</body>
+</html>

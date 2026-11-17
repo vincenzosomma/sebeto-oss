@@ -1,0 +1,221 @@
+{
+  "recordedWith": "packages/core/scripts/record-ollama-fixtures.mjs",
+  "ollamaVersion": "0.40.16",
+  "model": "qwen3-vl:4b-instruct",
+  "capabilities": [
+    "completion",
+    "vision",
+    "tools"
+  ],
+  "systemPrompt": "You are an IT Ops assistant. Answer in one short sentence.",
+  "prompt": "How much free space is left on drive C: of the server? Use the tool to check, then tell me.",
+  "tools": [
+    {
+      "name": "get_free_disk_space",
+      "description": "Return the free and total space of a Windows drive on the managed server.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "drive": {
+            "type": "string",
+            "description": "Drive letter, e.g. \"C:\""
+          }
+        },
+        "required": [
+          "drive"
+        ]
+      }
+    }
+  ],
+  "toolResult": "Drive C: has 112 GB free of 476 GB (23% free).",
+  "toolCalls": [
+    {
+      "name": "get_free_disk_space",
+      "args": {
+        "drive": "C:"
+      }
+    }
+  ],
+  "exchanges": [
+    {
+      "path": "/api/chat",
+      "request": {
+        "model": "qwen3-vl:4b-instruct",
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are an IT Ops assistant. Answer in one short sentence.\n\nUse the provided tools to act; you cannot do anything outside them. When a tool says a permission was requested, stop and wait."
+          },
+          {
+            "role": "user",
+            "content": "How much free space is left on drive C: of the server? Use the tool to check, then tell me."
+          }
+        ],
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "get_free_disk_space",
+              "description": "Return the free and total space of a Windows drive on the managed server.",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "drive": {
+                    "type": "string",
+                    "description": "Drive letter, e.g. \"C:\""
+                  }
+                },
+                "required": [
+                  "drive"
+                ]
+              }
+            }
+          }
+        ],
+        "stream": false,
+        "options": {
+          "num_ctx": 16384
+        }
+      },
+      "status": 200,
+      "response": {
+        "model": "qwen3-vl:4b-instruct",
+        "created_at": "2026-11-11T21:02:28.1875375Z",
+        "message": {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_uypdvyh4",
+              "function": {
+                "index": 0,
+                "name": "get_free_disk_space",
+                "arguments": {
+                  "drive": "C:"
+                }
+              }
+            }
+          ]
+        },
+        "done": true,
+        "done_reason": "stop",
+        "total_duration": 13818757000,
+        "load_duration": 13139093000,
+        "prompt_eval_count": 234,
+        "prompt_eval_cached_count": 0,
+        "prompt_eval_duration": 385210000,
+        "eval_count": 23,
+        "eval_duration": 290746000
+      }
+    },
+    {
+      "path": "/api/chat",
+      "request": {
+        "model": "qwen3-vl:4b-instruct",
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are an IT Ops assistant. Answer in one short sentence.\n\nUse the provided tools to act; you cannot do anything outside them. When a tool says a permission was requested, stop and wait."
+          },
+          {
+            "role": "user",
+            "content": "How much free space is left on drive C: of the server? Use the tool to check, then tell me."
+          },
+          {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_uypdvyh4",
+                "function": {
+                  "index": 0,
+                  "name": "get_free_disk_space",
+                  "arguments": {
+                    "drive": "C:"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "content": "Drive C: has 112 GB free of 476 GB (23% free).",
+            "tool_name": "get_free_disk_space"
+          }
+        ],
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "get_free_disk_space",
+              "description": "Return the free and total space of a Windows drive on the managed server.",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "drive": {
+                    "type": "string",
+                    "description": "Drive letter, e.g. \"C:\""
+                  }
+                },
+                "required": [
+                  "drive"
+                ]
+              }
+            }
+          }
+        ],
+        "stream": false,
+        "options": {
+          "num_ctx": 16384
+        }
+      },
+      "status": 200,
+      "response": {
+        "model": "qwen3-vl:4b-instruct",
+        "created_at": "2026-11-11T21:02:28.5856684Z",
+        "message": {
+          "role": "assistant",
+          "content": "Drive C: has 112 GB free out of a total of 476 GB (23% free)."
+        },
+        "done": true,
+        "done_reason": "stop",
+        "total_duration": 391926200,
+        "load_duration": 4352500,
+        "prompt_eval_count": 291,
+        "prompt_eval_cached_count": 256,
+        "prompt_eval_duration": 34024000,
+        "eval_count": 27,
+        "eval_duration": 347934000
+      }
+    }
+  ],
+  "liveEvents": [
+    {
+      "kind": "session",
+      "externalSessionId": "fixture-session"
+    },
+    {
+      "kind": "tool",
+      "name": "get_free_disk_space",
+      "summary": "Used Sebeto tool get_free_disk_space {\"drive\":\"C:\"}"
+    },
+    {
+      "kind": "text",
+      "text": "Drive C: has 112 GB free out of a total of 476 GB (23% free)."
+    },
+    {
+      "kind": "usage",
+      "tokensIn": 525,
+      "tokensOut": 50,
+      "costUsd": 0,
+      "contextTokens": 291
+    },
+    {
+      "kind": "done",
+      "tokensIn": 525,
+      "tokensOut": 50,
+      "costUsd": 0,
+      "isError": false
+    }
+  ]
+}

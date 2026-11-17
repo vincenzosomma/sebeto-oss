@@ -1,0 +1,40 @@
+{
+  "name": "sebeto",
+  "private": true,
+  "version": "0.8.0",
+  "description": "Sebeto: an open-source AI team orchestrator anyone can use.",
+  "license": "MIT",
+  "type": "module",
+  "workspaces": [
+    "packages/shared",
+    "packages/core",
+    "packages/ui",
+    "apps/desktop"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node scripts/start-local.mjs",
+    "build": "npm run build -w @sebeto/shared && npm run build -w @sebeto/core && npm run build -w @sebeto/ui && npm run build -w @sebeto/desktop",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "vitest run",
+    "icons": "node scripts/make-icons.mjs",
+    "dist:desktop": "npm run dist -w @sebeto/desktop",
+    "dev:core": "npm run dev -w @sebeto/core",
+    "dev:ui": "npm run dev -w @sebeto/ui",
+    "dev:desktop": "npm run dev -w @sebeto/desktop"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "vitest": "^5.1.0"
+  },
+  "overrides": {
+    "@esbuild-kit/core-utils": {
+      "esbuild": "^0.28.2"
+    },
+    "minimatch@>=7.0.0 <11.0.1": "^11.0.8"
+  }
+}

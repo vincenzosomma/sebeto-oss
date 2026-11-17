@@ -1,0 +1,9 @@
+{
+  "subject": "Problem: Free disk space is less than 5% on volume C:",
+  "message": "Problem started at 08:05:00 on 2026.11.12\nProblem name: Free disk space is less than 5% on volume C:\nHost: SRV-FS01\nSeverity: High",
+  "severity": "High",
+  "host": "SRV-FS01",
+  "eventid": "884213",
+  "status": "PROBLEM",
+  "recovery": "false"
+}

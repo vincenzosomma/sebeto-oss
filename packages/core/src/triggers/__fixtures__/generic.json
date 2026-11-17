@@ -1,0 +1,8 @@
+{
+  "title": "Backup failed",
+  "message": "Nightly backup of SRV-SQL01 failed with code 2",
+  "severity": "major",
+  "host": "srv-sql01",
+  "id": "bk-2026-11-12",
+  "api_key": "sk-live-abcdef0123456789abcdef"
+}

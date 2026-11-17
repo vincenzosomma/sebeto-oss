@@ -1,0 +1,15 @@
+{
+  "heartbeat": {
+    "monitorID": 7,
+    "status": 1,
+    "time": "2026-11-12 08:09:12.345",
+    "msg": "200 - OK",
+    "important": true
+  },
+  "monitor": {
+    "id": 7,
+    "name": "Intranet portal",
+    "url": "https://intranet.corp.local"
+  },
+  "msg": "[Intranet portal] [Up] 200 - OK"
+}

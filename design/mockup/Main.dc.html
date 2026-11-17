@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sebeto Board</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F6F6F3}
+a{color:#0E5A8A}a:hover{color:#0A4468}
+button{font-family:inherit;cursor:pointer}
+input{font-family:inherit}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap; background: #F6F6F3; color: #1C1C1A; font-family: Inter, system-ui, sans-serif; font-size: 14px; line-height: 1.45">
+
+<!-- ============ LEFT SIDEBAR ============ -->
+<aside style="flex: 1 1 280px; max-width: 100%; box-sizing: border-box; background: #FFFFFF; border-right: 1px solid #E4E4DF; display: flex; flex-direction: column; gap: 20px; padding: 20px 16px">
+  <div style="display: flex; align-items: center; gap: 10px">
+    <svg width="36" height="36" viewBox="0 0 48 48" role="img" aria-label="Sebeto logo"><path d="M4 24C10 14.5 19 10 30 10a14 14 0 0 1 0 28C19 38 10 33.5 4 24Z" fill="#0E5A8A"></path><circle cx="13" cy="24" r="3" fill="#E2B64E"></circle><path d="M18 24H40M18 24c8 0 9-7.5 19.5-7.5M18 24c8 0 9 7.5 19.5 7.5" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round"></path></svg>
+    <div>
+      <div style="font-family: Manrope, Inter, sans-serif; font-weight: 700; font-size: 22px; letter-spacing: -0.04em; line-height: 1.1; color: #0A4468">sebeto</div>
+      <div style="font-size: 12px; color: #5F5F5A">IT Ops workspace</div>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div style="display: flex; flex-direction: column; gap: 6px">
+    <label for="search" style="font-size: 12px; font-weight: 600; color: #5F5F5A; text-transform: uppercase; letter-spacing: 0.04em">Search tickets &amp; chats</label>
+    <div style="display: flex; align-items: center; gap: 8px; border: 1px solid #D6D6D0; border-radius: 10px; padding: 0 12px; height: 44px; background: #FAFAF8">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5F5F5A" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+      <input id="search" type="search" placeholder="Try “certificate” or “VPN”" value="{{query}}" onChange="{{onQuery}}" style="border: 0; outline: none; background: transparent; flex: 1; font-size: 14px; min-width: 0; color: #1C1C1A">
+    </div>
+    <div role="group" aria-label="Search mode" style="display: flex; gap: 4px; background: #EFEFEC; border-radius: 8px; padding: 3px">
+      <button type="button" onClick="{{modeExact}}" style="{{exactStyle}}">Exact words</button>
+      <button type="button" onClick="{{modeMeaning}}" style="{{meaningStyle}}">By meaning</button>
+    </div>
+    <sc-if value="{{hasQuery}}" hint-placeholder-val="{{ false }}">
+      <div style="font-size: 12px; color: #5F5F5A">{{searchSummary}}</div>
+    </sc-if>
+  </div>
+
+  <!-- Intake agent -->
+  <section style="display: flex; flex-direction: column; gap: 10px; border: 1px solid #E4E4DF; border-radius: 12px; padding: 14px; background: #FAFAF8">
+    <div style="display: flex; align-items: center; justify-content: space-between">
+      <h2 style="margin: 0; font-size: 14px; font-weight: 700">New ticket</h2>
+      <span style="font-size: 11px; color: #5F5F5A; background: #EFEFEC; border-radius: 999px; padding: 2px 8px">Chief of Staff agent</span>
+    </div>
+    <div style="font-size: 12px; color: #5F5F5A">Start from a template</div>
+    <div style="display: flex; flex-wrap: wrap; gap: 6px">
+      <button type="button" style="height: 32px; padding: 0 10px; border: 1px solid #D6D6D0; border-radius: 999px; background: #FFFFFF; color: #1C1C1A; font-size: 12px">Incident summary</button>
+      <button type="button" style="height: 32px; padding: 0 10px; border: 1px solid #D6D6D0; border-radius: 999px; background: #FFFFFF; color: #1C1C1A; font-size: 12px">Clean an inventory</button>
+      <button type="button" style="height: 32px; padding: 0 10px; border: 1px solid #D6D6D0; border-radius: 999px; background: #FFFFFF; color: #1C1C1A; font-size: 12px">Draft a user notice</button>
+      <button type="button" style="height: 32px; padding: 0 10px; border: 1px solid #D6D6D0; border-radius: 999px; background: #FFFFFF; color: #1C1C1A; font-size: 12px">Write a KB article</button>
+    </div>
+    <div style="font-size: 12px; color: #5F5F5A">…or just describe it</div>
+    <div style="align-self: flex-end; max-width: 88%; background: #E3EEF5; border-radius: 10px 10px 2px 10px; padding: 8px 10px; font-size: 13px">I need a list of laptops whose warranty expires this year.</div>
+    <div style="max-width: 92%; background: #FFFFFF; border: 1px solid #E4E4DF; border-radius: 10px 10px 10px 2px; padding: 8px 10px; font-size: 13px">Which data source, and what format do you want at the end?</div>
+    <div style="align-self: flex-end; max-width: 88%; background: #E3EEF5; border-radius: 10px 10px 2px 10px; padding: 8px 10px; font-size: 13px">The asset inventory. An Excel list grouped by office.</div>
+    <sc-if value="{{showProposal}}" hint-placeholder-val="{{ true }}">
+      <div style="background: #FFFFFF; border: 1px solid #BFD6E6; border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 6px">
+        <div style="font-size: 11px; font-weight: 600; color: #0E5A8A; text-transform: uppercase; letter-spacing: 0.04em">Proposed ticket</div>
+        <div style="font-weight: 600">Laptop warranty expiry report</div>
+        <ul style="margin: 0; padding-left: 18px; font-size: 12px; color: #45453F">
+          <li>List laptops with warranty ending in 2026</li>
+          <li>Deliver: Excel, grouped by office</li>
+          <li>Assign to: Analyst (Service Desk) · Folder: Infra/Assets</li>
+          <li>Cost cap: $2.00 · Waits for: T-103 (inventory cleanup)</li>
+        </ul>
+        <div style="display: flex; gap: 8px; margin-top: 4px">
+          <button type="button" onClick="{{createTicket}}" style="flex: 1; height: 40px; border: 0; border-radius: 8px; background: #0E5A8A; color: #FFFFFF; font-weight: 600; font-size: 13px">Create ticket</button>
+          <button type="button" style="height: 40px; border: 1px solid #D6D6D0; border-radius: 8px; background: #FFFFFF; color: #1C1C1A; font-size: 13px; padding: 0 12px">Edit</button>
+        </div>
+      </div>
+    </sc-if>
+    <sc-if value="{{created}}" hint-placeholder-val="{{ false }}">
+      <div style="background: #EAF5EE; border-radius: 10px; padding: 10px; font-size: 13px; color: #1F5C38">Created <strong>T-110</strong> in Backlog. Press Start when you’re ready.</div>
+    </sc-if>
+    <div style="display: flex; gap: 6px">
+      <label for="intake" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Describe what you need</label>
+      <input id="intake" type="text" placeholder="Speak, and your team gets to work…" style="flex: 1; min-width: 0; height: 40px; border: 1px solid #D6D6D0; border-radius: 8px; padding: 0 10px; font-size: 13px; background: #FFFFFF">
+      <button type="button" aria-label="Send to intake agent" style="width: 40px; height: 40px; border: 0; border-radius: 8px; background: #1C1C1A; color: #FFFFFF; display: flex; align-items: center; justify-content: center">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- Views -->
+  <nav aria-label="Views" style="display: flex; flex-direction: column; gap: 2px">
+    <div style="font-size: 12px; font-weight: 600; color: #5F5F5A; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px">Views</div>
+    <a href="#" style="display: flex; justify-content: space-between; padding: 10px; border-radius: 8px; background: #EFEFEC; color: #1C1C1A; text-decoration: none; font-weight: 600">All tickets <span>{{totalCount}}</span></a>
+    <a href="#" style="display: flex; justify-content: space-between; padding: 10px; border-radius: 8px; color: #1C1C1A; text-decoration: none">Needs me <span style="color: #B45309; font-weight: 600">{{reviewCount}}</span></a>
+    <a href="#" style="display: flex; justify-content: space-between; padding: 10px; border-radius: 8px; color: #1C1C1A; text-decoration: none">Blocked <span style="color: #9B1C1C; font-weight: 600">{{blockedCount}}</span></a>
+    <a href="#" style="display: flex; justify-content: space-between; padding: 10px; border-radius: 8px; color: #1C1C1A; text-decoration: none">Templates <span style="color: #5F5F5A">6</span></a>
+  </nav>
+</aside>
+
+<!-- ============ MAIN ============ -->
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column">
+  <header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 24px; border-bottom: 1px solid #E4E4DF; background: #FFFFFF">
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <nav aria-label="Sections" style="display: flex; gap: 4px">
+        <a href="Main.dc.html" aria-current="page" style="font-size: 18px; font-weight: 700; color: #1C1C1A; text-decoration: none; padding: 4px 10px; border-radius: 8px; background: #F7EDD3; box-shadow: inset 0 -3px 0 #E2B64E">Board</a>
+        <a href="Team.dc.html" style="font-size: 18px; font-weight: 600; color: #5F5F5A; text-decoration: none; padding: 4px 10px; border-radius: 8px">Agents team</a>
+        <a href="Skills.dc.html" style="font-size: 18px; font-weight: 600; color: #5F5F5A; text-decoration: none; padding: 4px 10px; border-radius: 8px">Agents &amp; skills</a>
+      </nav>
+      <div style="font-size: 13px; color: #5F5F5A; padding-left: 10px">{{runningCount}} agents working · {{reviewCount}} waiting for you · Statuses update automatically</div>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+      <div style="display: flex; flex-direction: column; gap: 4px; min-width: 190px">
+        <div style="display: flex; justify-content: space-between; font-size: 12px; color: #45453F"><span>Monthly budget</span><span><strong style="color: #1C1C1A">$41.20</strong> of $120</span></div>
+        <div style="height: 6px; background: #EFEFEC; border-radius: 3px"><div style="width: 34%; height: 6px; background: #0E5A8A; border-radius: 3px"></div></div>
+      </div>
+      <button type="button" aria-label="Notifications: {{reviewCount}} tickets need you" style="position: relative; width: 44px; height: 40px; border: 1px solid #D6D6D0; border-radius: 8px; background: #FFFFFF; color: #1C1C1A; display: flex; align-items: center; justify-content: center">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10 21h4"></path></svg>
+        <span style="position: absolute; top: -6px; right: -6px; min-width: 18px; height: 18px; border-radius: 9px; background: #B45309; color: #FFFFFF; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{reviewCount}}</span>
+      </button>
+      <button type="button" style="height: 40px; padding: 0 14px; border: 1px solid #D6D6D0; border-radius: 8px; background: #FFFFFF; color: #1C1C1A; font-size: 13px">All agents ▾</button>
+      <button type="button" style="height: 40px; padding: 0 14px; border: 1px solid #D6D6D0; border-radius: 8px; background: #FFFFFF; color: #1C1C1A; font-size: 13px">Max 3 in parallel</button>
+      <button type="button" style="height: 40px; padding: 0 14px; border: 0; border-radius: 8px; background: #E2B64E; color: #1C1C1A; font-size: 13px; font-weight: 600">Start next in backlog</button>
+    </div>
+  </header>
+
+  <div style="display: flex; flex-wrap: wrap; flex: 1; min-height: 0">
+    <!-- Board -->
+    <section aria-label="Ticket board" style="flex: 999 1 600px; min-width: 0; overflow-x: auto; padding: 20px 24px">
+      <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; min-width: 920px">
+        <sc-for list="{{columns}}" as="col" hint-placeholder-count="5">
+          <div style="display: flex; flex-direction: column; gap: 10px; background: #EFEFEA; border-radius: 12px; padding: 10px; min-height: 520px">
+            <div style="display: flex; align-items: center; gap: 8px; padding: 4px 4px 6px">
+              <span style="{{col.dotStyle}}" aria-hidden="true"></span>
+              <h2 style="margin: 0; font-size: 13px; font-weight: 700">{{col.label}}</h2>
+              <span style="margin-left: auto; font-size: 12px; color: #5F5F5A; background: #FFFFFF; border-radius: 999px; padding: 1px 8px">{{col.count}}</span>
+            </div>
+            <div style="font-size: 11px; color: #5F5F5A; padding: 0 4px">{{col.hint}}</div>
+            <sc-for list="{{col.cards}}" as="t" hint-placeholder-count="2">
+              <button type="button" onClick="{{t.pick}}" style="{{t.cardStyle}}">
+                <span style="display: flex; justify-content: space-between; font-size: 11px; color: #5F5F5A"><span>{{t.id}}</span><span>{{t.role}} · {{t.agent}}</span></span>
+                <span style="font-weight: 600; font-size: 13px; color: #1C1C1A">{{t.title}}</span>
+                <span style="{{t.activityStyle}}">{{t.activity}}</span>
+                <sc-if value="{{t.hasDep}}" hint-placeholder-val="{{ false }}">
+                  <span style="font-size: 11px; color: #45453F; background: #EFEFEC; border-radius: 6px; padding: 2px 6px; align-self: flex-start">{{t.depNote}}</span>
+                </sc-if>
+                <sc-if value="{{t.hasPerm}}" hint-placeholder-val="{{ false }}">
+                  <span style="font-size: 11px; color: #6B3606; background: #FDF3E7; border-radius: 6px; padding: 2px 6px; align-self: flex-start">Permission request</span>
+                </sc-if>
+                <sc-if value="{{t.hasMatch}}" hint-placeholder-val="{{ false }}">
+                  <span style="font-size: 11px; color: #0E5A8A; background: #E3EEF5; border-radius: 6px; padding: 2px 6px; align-self: flex-start">{{t.matchNote}}</span>
+                </sc-if>
+                <span style="display: flex; justify-content: space-between; font-size: 11px; color: #5F5F5A"><span>{{t.updated}}</span><span>{{t.cost}}</span></span>
+              </button>
+            </sc-for>
+            <sc-if value="{{col.empty}}" hint-placeholder-val="{{ false }}">
+              <div style="font-size: 12px; color: #5F5F5A; text-align: center; padding: 16px 4px; border: 1px dashed #CFCFC8; border-radius: 10px">No tickets</div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- Ticket detail -->
+    <aside aria-label="Ticket detail" style="flex: 1 1 380px; min-width: 0; box-sizing: border-box; background: #FFFFFF; border-left: 1px solid #E4E4DF; display: flex; flex-direction: column">
+      <sc-if value="{{hasSel}}" hint-placeholder-val="{{ true }}">
+        <div style="padding: 18px 20px; border-bottom: 1px solid #E4E4DF; display: flex; flex-direction: column; gap: 8px">
+          <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: #5F5F5A">
+            <span>{{sel.id}}</span><span>·</span><span>{{sel.role}} ({{sel.agent}})</span><span>·</span><span>Folder: {{sel.folder}}</span>
+            <button type="button" aria-label="Close ticket" onClick="{{closeSel}}" style="margin-left: auto; width: 32px; height: 32px; border: 0; background: transparent; color: #5F5F5A; display: flex; align-items: center; justify-content: center">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+            </button>
+          </div>
+          <h2 style="margin: 0; font-size: 18px; font-weight: 700">{{sel.title}}</h2>
+          <div style="display: flex; align-items: center; gap: 8px">
+            <span style="{{sel.badgeStyle}}">{{sel.statusLabel}}</span>
+            <span style="font-size: 12px; color: #5F5F5A">{{sel.cost}} of {{sel.cap}} cap · updated {{sel.updated}}</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #45453F">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 12h4l3-8 4 16 3-8h4"></path></svg>
+            <span>{{sel.heartbeat}}</span>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px" role="group" aria-label="Move ticket to">
+            <span style="font-size: 12px; color: #5F5F5A; align-self: center; margin-right: 2px">Move to</span>
+            <sc-for list="{{movePills}}" as="p" hint-placeholder-count="5">
+              <button type="button" onClick="{{p.pick}}" style="{{p.style}}">{{p.label}}</button>
+            </sc-for>
+          </div>
+        </div>
+
+        <sc-if value="{{sel.hasBanner}}" hint-placeholder-val="{{ true }}">
+          <div style="{{sel.bannerStyle}}">
+            <div style="font-weight: 600; font-size: 13px">{{sel.bannerTitle}}</div>
+            <div style="font-size: 13px">{{sel.bannerText}}</div>
+            <div style="display: flex; gap: 8px; margin-top: 6px">
+              <button type="button" onClick="{{primary}}" style="height: 40px; padding: 0 14px; border: 0; border-radius: 8px; background: #1C1C1A; color: #FFFFFF; font-weight: 600; font-size: 13px">{{sel.primaryLabel}}</button>
+              <button type="button" onClick="{{secondary}}" style="height: 40px; padding: 0 14px; border: 1px solid #D6D6D0; border-radius: 8px; background: #FFFFFF; color: #1C1C1A; font-size: 13px">{{sel.secondaryLabel}}</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{sel.hasPerm}}" hint-placeholder-val="{{ false }}">
+          <div style="margin: 12px 20px 0; border: 1px solid #E3B27A; border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; background: #FFFFFF">
+            <div style="display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 13px; color: #6B3606">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"></path></svg>
+              {{sel.permTitle}}
+            </div>
+            <div style="font-size: 13px; color: #45453F">{{sel.permText}}</div>
+            <sc-if value="{{sel.permOpen}}" hint-placeholder-val="{{ true }}">
+              <div style="display: flex; gap: 8px; margin-top: 6px">
+                <button type="button" onClick="{{allowPerm}}" style="height: 40px; padding: 0 14px; border: 0; border-radius: 8px; background: #1C1C1A; color: #FFFFFF; font-weight: 600; font-size: 13px">Allow once</button>
+                <button type="button" onClick="{{denyPerm}}" style="height: 40px; padding: 0 14px; border: 1px solid #D6D6D0; border-radius: 8px; background: #FFFFFF; color: #1C1C1A; font-size: 13px">Deny</button>
+              </div>
+            </sc-if>
+            <sc-if value="{{sel.permClosed}}" hint-placeholder-val="{{ false }}">
+              <div style="font-size: 13px; font-weight: 600; color: #1F5C38">{{sel.permResult}}</div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <div style="flex: 1; overflow-y: auto; padding: 16px 20px; display: flex; flex-direction: column; gap: 10px; min-height: 260px">
+          <div style="font-size: 12px; font-weight: 600; color: #5F5F5A; text-transform: uppercase; letter-spacing: 0.04em">Conversation</div>
+          <sc-for list="{{msgs}}" as="m" hint-placeholder-count="3">
+            <div style="{{m.wrapStyle}}">
+              <div style="font-size: 11px; color: #5F5F5A; margin-bottom: 2px">{{m.who}}</div>
+              <div style="{{m.bubbleStyle}}">{{m.text}}</div>
+            </div>
+          </sc-for>
+
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 8px">
+            <div style="font-size: 12px; font-weight: 600; color: #5F5F5A; text-transform: uppercase; letter-spacing: 0.04em">What the agent did</div>
+            <sc-if value="{{sel.canUndo}}" hint-placeholder-val="{{ false }}">
+              <button type="button" onClick="{{undo}}" style="height: 32px; padding: 0 10px; border: 1px solid #D6D6D0; border-radius: 8px; background: #FFFFFF; color: #1C1C1A; font-size: 12px">Undo all changes</button>
+            </sc-if>
+          </div>
+          <sc-if value="{{sel.hasSnap}}" hint-placeholder-val="{{ false }}">
+            <div style="font-size: 12px; color: #45453F; background: #F1F1EE; border-radius: 8px; padding: 8px 10px">{{sel.snapText}}</div>
+          </sc-if>
+          <ol style="margin: 0; padding-left: 18px; font-size: 13px; color: #45453F; display: flex; flex-direction: column; gap: 4px">
+            <sc-for list="{{sel.log}}" as="l" hint-placeholder-count="3">
+              <li>{{l}}</li>
+            </sc-for>
+          </ol>
+
+          <sc-if value="{{sel.hasOutputs}}" hint-placeholder-val="{{ true }}">
+            <div style="font-size: 12px; font-weight: 600; color: #5F5F5A; text-transform: uppercase; letter-spacing: 0.04em; margin-top: 8px">Outputs</div>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px">
+              <sc-for list="{{sel.outputs}}" as="o" hint-placeholder-count="2">
+                <a href="#" style="display: flex; align-items: center; gap: 8px; border: 1px solid #E4E4DF; border-radius: 8px; padding: 8px 10px; text-decoration: none; color: #1C1C1A; font-size: 13px">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5F5F5A" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"></path><path d="M14 3v4h4"></path></svg>
+                  {{o}}
+                </a>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+
+        <div style="border-top: 1px solid #E4E4DF; padding: 12px 20px; display: flex; gap: 8px">
+          <label for="reply" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Message the agent</label>
+          <input id="reply" type="text" placeholder="Message the agent on this ticket…" value="{{draft}}" onChange="{{onDraft}}" style="flex: 1; min-width: 0; height: 44px; border: 1px solid #D6D6D0; border-radius: 10px; padding: 0 12px; font-size: 14px">
+          <button type="button" onClick="{{send}}" style="height: 44px; padding: 0 16px; border: 0; border-radius: 10px; background: #0E5A8A; color: #FFFFFF; font-weight: 600">Send</button>
+        </div>
+      </sc-if>
+      <sc-if value="{{noSel}}" hint-placeholder-val="{{ false }}">
+        <div style="padding: 40px 24px; color: #5F5F5A; font-size: 14px; text-align: center">Select a ticket to open its chat session.</div>
+      </sc-if>
+    </aside>
+  </div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1600,"height":1000}}'>
+var STATUS = {
+  backlog:  { label: 'Backlog',     dot: '#8A8A85', hint: 'Drafted, not started' },
+  progress: { label: 'In progress', dot: '#0E5A8A', hint: 'Agent is working' },
+  review:   { label: 'Needs you',   dot: '#B45309', hint: 'Waiting for your review or answer' },
+  blocked:  { label: 'Blocked',     dot: '#9B1C1C', hint: 'Agent cannot continue' },
+  done:     { label: 'Completed',   dot: '#2E7D4F', hint: 'Finished, with outputs' }
+};
+var ORDER = ['backlog', 'progress', 'review', 'blocked', 'done'];
+
+var BASE = [
+  { id: 'T-101', title: 'Summarise last week’s incidents', status: 'progress', agent: 'Claude', folder: 'ServiceDesk/Incidents', updated: '2 min ago', cost: '$0.38',
+    activity: 'Reading incident tickets · 142 of 214',
+    msgs: [ { from: 'you', text: 'Summarise last week’s incidents into the top 5 root causes, with two examples each.' },
+            { from: 'agent', text: 'On it. I found 214 tickets in the service desk export. I’ll group them by root cause and pick clear examples.' } ],
+    log: ['Opened Incidents_W45.csv', 'Grouped 142 tickets into 7 draft causes', 'Merging similar causes…'], outputs: [] },
+  { id: 'T-102', title: 'Draft maintenance notice for staff', status: 'review', agent: 'Claude', folder: 'Comms/Notices', updated: '8 min ago', cost: '$0.21',
+    activity: 'Draft ready. Approve the tone?',
+    msgs: [ { from: 'you', text: 'Write the notice for Saturday’s email server maintenance (22:00–02:00). Mention the webmail fallback.' },
+            { from: 'handoff', who: 'Analyst → Comms writer · handoff from T-101', text: 'Top 5 incident causes attached. Cause #2 (full mailboxes) is worth a tip in the notice.' },
+            { from: 'handoff', who: 'Comms writer → Service Desk Lead · review', text: 'First draft ready (180 words). Please check the tone.' },
+            { from: 'handoff', who: 'Service Desk Lead → Comms writer · approved', text: 'Clear and short. Send it to the owner.' },
+            { from: 'agent', text: 'Here’s the draft. I wasn’t sure whether to include the IT hotline number. Should I?' } ],
+    log: ['Read the last 3 maintenance notices for tone', 'Pulled the window from change CHG-2291', 'Wrote Notice_Maintenance.docx'], outputs: ['Notice_Maintenance.docx'] },
+  { id: 'T-103', title: 'Clean up asset inventory', status: 'blocked', agent: 'Claude', folder: 'Infra/Assets', updated: '25 min ago', cost: '$0.05',
+    activity: 'Needs access to Assets_2026.xlsx',
+    msgs: [ { from: 'you', text: 'Remove duplicate laptops and fix the serial number formats in the asset inventory.' },
+            { from: 'agent', text: 'I can’t open Assets_2026.xlsx. It’s outside this ticket’s folder. Can you grant access or move it into Infra/Assets?' } ],
+    log: ['Looked for inventory files', 'Permission denied: Shared/IT/Assets_2026.xlsx'], outputs: [] },
+  { id: 'T-104', title: 'Compare 3 backup solutions', status: 'backlog', agent: 'Claude', folder: 'Research/Backup', updated: 'yesterday', cost: '$0.00',
+    activity: 'Not started',
+    msgs: [ { from: 'agent', text: 'Ticket created from intake. Goal: a comparison of price, retention, restore time and setup effort. Press Start when ready.' } ],
+    log: ['Created by intake agent'], outputs: [] },
+  { id: 'T-105', title: 'Plan Windows 11 rollout', status: 'backlog', agent: 'Claude', folder: 'Infra/Win11', updated: '2 days ago', cost: '$0.00',
+    activity: 'Not started',
+    msgs: [ { from: 'agent', text: 'Ticket created. I’ll propose a phased schedule once you add the device count per office.' } ],
+    log: ['Created by intake agent'], outputs: [] },
+  { id: 'T-107', title: 'Renew expiring SSL certificates', status: 'progress', agent: 'Codex', folder: 'Infra/Certs', updated: 'just now', cost: '$0.62',
+    activity: 'Renewed 9 of 14 certificates in staging',
+    msgs: [ { from: 'you', text: 'Find certificates expiring in the next 30 days and renew them.' },
+            { from: 'agent', text: 'I found 14. I’m renewing them in staging now and will show you the list before touching production.' } ],
+    log: ['Scanned 86 hosts', 'Found 14 certificates expiring within 30 days', 'Renewed 9 in staging'], outputs: [] },
+  { id: 'T-109', title: 'Check new CVEs for our firewall', status: 'review', agent: 'Gemini', folder: 'Security/CVE', updated: '1 h ago', cost: '$0.44',
+    activity: 'Found 3 CVEs. Which to prioritise?',
+    msgs: [ { from: 'you', text: 'Check whether any new CVEs affect our firewall model and firmware.' },
+            { from: 'agent', text: 'Three CVEs match our firmware, and one is rated critical. Should I draft a patch plan for the critical one first?' } ],
+    log: ['Searched NVD and vendor advisories', 'Matched firmware 7.2.4', 'Wrote CVE_report.xlsx'], outputs: ['CVE_report.xlsx'] },
+  { id: 'T-106', title: 'Organise runbooks folder', status: 'done', agent: 'Claude', folder: 'Infra/Runbooks', updated: 'Mon', cost: '$0.12',
+    activity: '84 runbooks renamed and sorted by system',
+    msgs: [ { from: 'you', text: 'Rename the runbooks to system_task_date and sort them into a folder per system.' },
+            { from: 'agent', text: 'Done. 84 runbooks renamed and sorted. 4 had no clear system; I listed them in Unsorted.txt.' } ],
+    log: ['Read 88 documents', 'Renamed 84 files', 'Created 12 system folders'], outputs: ['Unsorted.txt'] },
+  { id: 'T-108', title: 'Write VPN setup KB article', status: 'done', agent: 'Claude', folder: 'ServiceDesk/KB', updated: 'Fri', cost: '$0.29',
+    activity: 'KB article ready for review',
+    msgs: [ { from: 'you', text: 'Write a step-by-step KB article for setting up the new VPN client on Windows and Mac.' },
+            { from: 'agent', text: 'Done, with screenshot placeholders. Someone should test the Mac steps on a real device.' } ],
+    log: ['Read the vendor install guide', 'Wrote 12 steps per OS'], outputs: ['KB_VPN_Setup.docx'] }
+];
+
+var NEW_TICKET = { id: 'T-110', title: 'Laptop warranty expiry report', status: 'backlog', agent: 'Claude', folder: 'Infra/Assets', updated: 'just now', cost: '$0.00',
+  activity: 'Not started',
+  msgs: [ { from: 'you', text: 'I need a list of laptops whose warranty expires this year.' },
+          { from: 'agent', text: 'Which data source, and what format do you want at the end?' },
+          { from: 'you', text: 'The asset inventory. An Excel list grouped by office.' },
+          { from: 'agent', text: 'Ticket created. It waits for T-103 (inventory cleanup) so the data is clean.' } ],
+  log: ['Created by intake agent'], outputs: [] };
+
+var ROLE = { 'T-101': 'Analyst', 'T-102': 'Comms writer', 'T-103': 'Sysadmin assistant', 'T-104': 'Analyst', 'T-105': 'Sysadmin assistant',
+  'T-107': 'Automation engineer', 'T-109': 'Researcher', 'T-106': 'Sysadmin assistant', 'T-108': 'Comms writer', 'T-110': 'Analyst' };
+var REPORTS = { 'Analyst': 'Service Desk Lead', 'Comms writer': 'Service Desk Lead', 'Researcher': 'Service Desk Lead', 'Sysadmin assistant': 'Infrastructure Lead', 'Automation engineer': 'Chief of Staff' };
+var HEART = { 'Analyst': '30 min', 'Comms writer': '1 h', 'Researcher': '30 min', 'Sysadmin assistant': '2 h', 'Automation engineer': '15 min' };
+var DEP = { 'T-104': 'Waits for T-101', 'T-105': 'Waits for T-103', 'T-110': 'Waits for T-103' };
+var PERM = {
+  'T-102': { title: 'Permission needed: send email', text: 'Wants to send Notice_Maintenance to all 1,240 staff via Outlook. The Comms writer is set to “Ask me first” for emails.' },
+  'T-107': { title: 'Permission needed: change production', text: 'Wants to install 9 renewed certificates on the production web servers. They were tested in staging first.' }
+};
+var SNAP = {
+  'T-106': 'Snapshot saved Mon 09:12 before renaming 84 files.',
+  'T-108': 'Snapshot saved Fri 16:40. Existing KB files are untouched.',
+  'T-107': 'Snapshot saved 14 min ago before changing Infra/Certs.'
+};
+var SYN = {
+  money: ['pricing', 'cost', 'budget', 'license', 'price'],
+  users: ['staff', 'user', 'incident', 'notice'],
+  email: ['notice', 'outlook', 'staff', 'mail'],
+  servers: ['certificate', 'host', 'production', 'staging'],
+  security: ['cve', 'firewall', 'patch', 'vulnerab'],
+  files: ['folder', 'runbook', 'inventory', 'spreadsheet', 'xlsx'],
+  laptops: ['asset', 'inventory', 'warranty', 'windows', 'device']
+};
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { selected: 'T-102', query: '', mode: 'exact', overrides: {}, extra: {}, created: false, draft: '', perm: {}, undone: {} };
+  }
+
+  setStatus(id, status) {
+    var o = Object.assign({}, this.state.overrides);
+    o[id] = status;
+    this.setState({ overrides: o });
+  }
+
+  renderVals() {
+    var self = this;
+    var st = this.state;
+    var q = (st.query || '').trim().toLowerCase();
+    var terms = !q ? [] : (st.mode === 'meaning' ? [q].concat(SYN[q] || []) : [q]);
+    var list = BASE.slice();
+    if (st.created) list.unshift(NEW_TICKET);
+
+    var tickets = list.map(function (t) {
+      var status = st.overrides[t.id] || t.status;
+      var msgs = t.msgs.concat(st.extra[t.id] || []);
+      var hit = function (s) { s = s.toLowerCase(); return terms.some(function (w) { return s.indexOf(w) >= 0; }); };
+      var inTitle = !q || hit(t.title + ' ' + t.id + ' ' + t.activity + ' ' + (ROLE[t.id] || ''));
+      var inChat = !!q && msgs.some(function (m) { return hit(m.text); });
+      return Object.assign({}, t, { status: status, msgs: msgs, visible: inTitle || inChat, chatOnly: !inTitle && inChat });
+    });
+
+    var visible = tickets.filter(function (t) { return t.visible; });
+    var chatMatches = visible.filter(function (t) { return t.chatOnly; }).length;
+
+    var columns = ORDER.map(function (key) {
+      var s = STATUS[key];
+      var cards = visible.filter(function (t) { return t.status === key; }).map(function (t) {
+        var isSel = t.id === st.selected;
+        var border = isSel ? '2px solid #0E5A8A' : (key === 'review' ? '1px solid #E3B27A' : '1px solid #E4E4DF');
+        return {
+          id: t.id, title: t.title, agent: t.agent, activity: t.activity, updated: t.updated, cost: t.cost,
+          hasMatch: t.chatOnly, matchNote: st.mode === 'meaning' ? 'Related, in chat history' : 'Match in chat history',
+          role: ROLE[t.id] || 'Unassigned',
+          hasDep: !!DEP[t.id] && key === 'backlog', depNote: DEP[t.id] || '',
+          hasPerm: !!PERM[t.id] && !st.perm[t.id],
+          cardStyle: 'display:flex;flex-direction:column;gap:6px;text-align:left;width:100%;box-sizing:border-box;background:#FFFFFF;border-radius:10px;padding:12px;border:' + border + ';box-shadow:0 1px 2px rgba(0,0,0,0.04)',
+          activityStyle: 'font-size:12px;color:' + (key === 'blocked' ? '#9B1C1C' : key === 'review' ? '#8A4207' : '#45453F'),
+          pick: function () { self.setState({ selected: t.id }); }
+        };
+      });
+      return {
+        label: s.label, hint: s.hint, count: cards.length, cards: cards, empty: cards.length === 0,
+        dotStyle: 'width:10px;height:10px;border-radius:50%;background:' + s.dot
+      };
+    });
+
+    var raw = tickets.find(function (t) { return t.id === st.selected; });
+    var sel = null, msgs = [], movePills = [];
+    if (raw) {
+      var s = STATUS[raw.status];
+      var banner = {
+        review:  { title: 'The agent is waiting for you', text: 'Review the output, then approve or ask for changes.', primary: 'Approve & complete', secondary: 'Request changes', bg: '#FDF3E7', fg: '#6B3606', a: 'done', b: 'progress' },
+        blocked: { title: 'Blocked', text: raw.activity + '. Fix it below, or reply in the chat.', primary: 'Grant access & resume', secondary: 'Cancel ticket', bg: '#FBEAEA', fg: '#7A1616', a: 'progress', b: 'backlog' },
+        backlog: { title: 'Ready to start', text: 'The agent has the goal and folder. Nothing runs until you press Start.', primary: 'Start', secondary: 'Edit goal', bg: '#F1F1EE', fg: '#3A3A36', a: 'progress', b: 'backlog' }
+      }[raw.status];
+      sel = {
+        id: raw.id, title: raw.title, agent: raw.agent, folder: raw.folder, cost: raw.cost, updated: raw.updated,
+        statusLabel: s.label,
+        role: ROLE[raw.id] || 'Unassigned', cap: '$2.00',
+        heartbeat: 'Assigned to ' + (ROLE[raw.id] || 'nobody') + ', who reports to ' + (REPORTS[ROLE[raw.id]] || 'you') + ' · checks in every ' + (HEART[ROLE[raw.id]] || '1 h') + ' · status set automatically',
+        hasPerm: !!PERM[raw.id],
+        permTitle: PERM[raw.id] ? PERM[raw.id].title : '',
+        permText: PERM[raw.id] ? PERM[raw.id].text : '',
+        permOpen: !!PERM[raw.id] && !st.perm[raw.id],
+        permClosed: !!st.perm[raw.id],
+        permResult: st.perm[raw.id] === 'allowed' ? 'Allowed once. The agent is continuing.' : 'Denied. The agent will ask how to proceed.',
+        hasSnap: !!SNAP[raw.id],
+        snapText: st.undone[raw.id] ? 'All changes reverted to the snapshot.' : (SNAP[raw.id] || ''),
+        canUndo: !!SNAP[raw.id] && !st.undone[raw.id],
+        badgeStyle: 'font-size:12px;font-weight:600;border-radius:999px;padding:3px 10px;color:#FFFFFF;background:' + s.dot,
+        log: raw.log, outputs: raw.outputs, hasOutputs: raw.outputs.length > 0,
+        hasBanner: !!banner,
+        bannerTitle: banner ? banner.title : '', bannerText: banner ? banner.text : '',
+        primaryLabel: banner ? banner.primary : '', secondaryLabel: banner ? banner.secondary : '',
+        bannerStyle: banner ? 'margin:12px 20px 0;border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:2px;background:' + banner.bg + ';color:' + banner.fg : ''
+      };
+      this._banner = banner;
+      msgs = raw.msgs.map(function (m) {
+        var you = m.from === 'you';
+        if (m.from === 'handoff') {
+          return {
+            text: m.text, who: m.who,
+            wrapStyle: 'display:flex;flex-direction:column;align-self:stretch',
+            bubbleStyle: 'font-size:12px;padding:8px 12px;border-radius:10px;border:1px dashed #B9B9B2;background:#FFFFFF;color:#45453F'
+          };
+        }
+        return {
+          text: m.text, who: you ? 'You' : (ROLE[raw.id] || raw.agent),
+          wrapStyle: 'display:flex;flex-direction:column;max-width:88%;align-self:' + (you ? 'flex-end' : 'flex-start'),
+          bubbleStyle: 'font-size:13px;padding:9px 12px;border-radius:' + (you ? '12px 12px 2px 12px;background:#E3EEF5' : '12px 12px 12px 2px;background:#F1F1EE')
+        };
+      });
+      movePills = ORDER.map(function (k) {
+        var active = k === raw.status;
+        return {
+          label: STATUS[k].label,
+          style: 'height:32px;padding:0 10px;border-radius:999px;font-size:12px;' + (active ? 'border:1px solid #1C1C1A;background:#1C1C1A;color:#FFFFFF' : 'border:1px solid #D6D6D0;background:#FFFFFF;color:#1C1C1A'),
+          pick: function () { self.setStatus(raw.id, k); }
+        };
+      });
+    }
+
+    var count = function (k) { return tickets.filter(function (t) { return t.status === k; }).length; };
+
+    return {
+      query: st.query,
+      onQuery: function (e) { self.setState({ query: e.target.value }); },
+      modeExact: function () { self.setState({ mode: 'exact' }); },
+      modeMeaning: function () { self.setState({ mode: 'meaning' }); },
+      exactStyle: 'flex:1;height:32px;border:0;border-radius:6px;font-size:12px;' + (st.mode === 'exact' ? 'background:#FFFFFF;color:#1C1C1A;font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,0.08)' : 'background:transparent;color:#45453F'),
+      meaningStyle: 'flex:1;height:32px;border:0;border-radius:6px;font-size:12px;' + (st.mode === 'meaning' ? 'background:#FFFFFF;color:#1C1C1A;font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,0.08)' : 'background:transparent;color:#45453F'),
+      allowPerm: function () { if (!raw) return; var p = Object.assign({}, st.perm); p[raw.id] = 'allowed'; self.setState({ perm: p }); },
+      denyPerm: function () { if (!raw) return; var p = Object.assign({}, st.perm); p[raw.id] = 'denied'; self.setState({ perm: p }); },
+      undo: function () { if (!raw) return; var u = Object.assign({}, st.undone); u[raw.id] = true; self.setState({ undone: u }); },
+      hasQuery: !!q,
+      searchSummary: visible.length + ' tickets match' + (chatMatches ? ' · ' + chatMatches + ' only in chat history' : ''),
+      showProposal: !st.created,
+      created: st.created,
+      createTicket: function () { self.setState({ created: true, selected: 'T-110', query: '' }); },
+      totalCount: tickets.length,
+      reviewCount: count('review'),
+      blockedCount: count('blocked'),
+      runningCount: count('progress'),
+      columns: columns,
+      hasSel: !!sel, noSel: !sel, sel: sel || {}, msgs: msgs, movePills: movePills,
+      closeSel: function () { self.setState({ selected: null }); },
+      primary: function () { if (raw && self._banner) self.setStatus(raw.id, self._banner.a); },
+      secondary: function () { if (raw && self._banner) self.setStatus(raw.id, self._banner.b); },
+      draft: st.draft,
+      onDraft: function (e) { self.setState({ draft: e.target.value }); },
+      send: function () {
+        var text = (st.draft || '').trim();
+        if (!raw || !text) return;
+        var ex = Object.assign({}, st.extra);
+        ex[raw.id] = (ex[raw.id] || []).concat([
+          { from: 'you', text: text },
+          { from: 'agent', text: 'Got it. I’ll continue with that and move this ticket back to In progress.' }
+        ]);
+        var o = Object.assign({}, st.overrides);
+        o[raw.id] = 'progress';
+        self.setState({ extra: ex, overrides: o, draft: '' });
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

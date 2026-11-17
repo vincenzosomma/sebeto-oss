@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sebeto Agents Team</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F6F6F3}
+a{color:#0E5A8A}a:hover{color:#0A4468}
+button{font-family:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; flex-direction: column; background: #F6F6F3; color: #1C1C1A; font-family: Inter, system-ui, sans-serif; font-size: 14px; line-height: 1.45">
+
+  <header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 24px; border-bottom: 1px solid #E4E4DF; background: #FFFFFF">
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <nav aria-label="Sections" style="display: flex; gap: 4px">
+        <a href="Main.dc.html" style="font-size: 18px; font-weight: 600; color: #5F5F5A; text-decoration: none; padding: 4px 10px; border-radius: 8px">Board</a>
+        <a href="Team.dc.html" aria-current="page" style="font-size: 18px; font-weight: 700; color: #1C1C1A; text-decoration: none; padding: 4px 10px; border-radius: 8px; background: #F7EDD3; box-shadow: inset 0 -3px 0 #E2B64E">Agents team</a>
+        <a href="Skills.dc.html" style="font-size: 18px; font-weight: 600; color: #5F5F5A; text-decoration: none; padding: 4px 10px; border-radius: 8px">Agents &amp; skills</a>
+      </nav>
+      <div style="font-size: 13px; color: #5F5F5A; padding-left: 10px">Your agents are organised like a company. Each one has a role, a manager, a budget and a check-in schedule.</div>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 8px">
+      <button type="button" style="height: 40px; padding: 0 14px; border: 1px solid #D6D6D0; border-radius: 8px; background: #FFFFFF; color: #1C1C1A; font-size: 13px">Import team template</button>
+      <button type="button" style="height: 40px; padding: 0 14px; border: 0; border-radius: 8px; background: #E2B64E; color: #1C1C1A; font-size: 13px; font-weight: 600">+ Hire agent</button>
+    </div>
+  </header>
+
+  <div style="display: flex; flex-wrap: wrap; flex: 1">
+    <!-- Org chart -->
+    <section aria-label="Org chart" style="flex: 999 1 640px; min-width: 0; overflow-x: auto; padding: 28px 24px">
+      <div style="min-width: 860px; display: flex; flex-direction: column; align-items: center">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 2px; background: #FFFFFF; border: 1px solid #D6D6D0; border-radius: 12px; padding: 12px 20px; width: 220px; box-sizing: border-box">
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: #0E5A8A; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700">V</div>
+          <div style="font-weight: 700">You</div>
+          <div style="font-size: 12px; color: #5F5F5A">Owner · approves risky actions</div>
+        </div>
+        <div style="width: 2px; height: 24px; background: #CFCFC8"></div>
+
+        <dc-import name="AgentNode" hint-size="240px,150px" agent="{{cos}}"></dc-import>
+        <div style="width: 2px; height: 24px; background: #CFCFC8"></div>
+
+        <div style="width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px">
+          <sc-for list="{{groups}}" as="g" hint-placeholder-count="3">
+            <div style="display: flex; flex-direction: column; align-items: center">
+              <div style="{{g.barStyle}}"></div>
+              <div style="width: 2px; height: 20px; background: #CFCFC8"></div>
+              <dc-import name="AgentNode" hint-size="240px,150px" agent="{{g.lead}}"></dc-import>
+              <sc-if value="{{g.hasKids}}" hint-placeholder-val="{{ true }}">
+                <div style="display: flex; flex-direction: column; gap: 12px; border-left: 2px solid #CFCFC8; margin-top: 12px; padding: 4px 0 4px 16px">
+                  <sc-for list="{{g.kids}}" as="k" hint-placeholder-count="2">
+                    <dc-import name="AgentNode" hint-size="240px,150px" agent="{{k}}"></dc-import>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <!-- Agent settings -->
+    <aside aria-label="Agent settings" style="flex: 1 1 400px; min-width: 0; box-sizing: border-box; background: #FFFFFF; border-left: 1px solid #E4E4DF; padding: 20px; display: flex; flex-direction: column; gap: 18px">
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <div style="font-size: 12px; color: #5F5F5A">{{sel.runtime}} · reports to {{sel.reports}}</div>
+        <h2 style="margin: 0; font-size: 20px; font-weight: 700">{{sel.name}}</h2>
+        <div style="display: flex; align-items: center; gap: 6px; font-size: 13px">
+          <span style="{{sel.dotStyle}}" aria-hidden="true"></span><span>{{sel.statusText}}</span>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <div style="font-size: 12px; font-weight: 600; color: #5F5F5A; text-transform: uppercase; letter-spacing: 0.04em">Job description</div>
+        <div style="font-size: 13px; color: #1C1C1A; border: 1px solid #E4E4DF; border-radius: 8px; padding: 10px 12px; background: #FAFAF8">{{sel.job}}</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 8px">
+        <div style="font-size: 12px; font-weight: 600; color: #5F5F5A; text-transform: uppercase; letter-spacing: 0.04em">Monthly budget</div>
+        <div style="display: flex; justify-content: space-between; font-size: 13px"><span><strong>${{sel.spent}}</strong> spent</span><span style="color: #5F5F5A">limit ${{sel.limit}}</span></div>
+        <div style="height: 8px; background: #EFEFEC; border-radius: 4px"><div style="{{sel.barStyle}}"></div></div>
+        <div style="font-size: 12px; color: #5F5F5A">Hard stop: the agent pauses itself at the limit and asks you to raise it.</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 8px">
+        <div style="font-size: 12px; font-weight: 600; color: #5F5F5A; text-transform: uppercase; letter-spacing: 0.04em">Checks in (heartbeat)</div>
+        <div role="group" aria-label="Heartbeat interval" style="display: flex; flex-wrap: wrap; gap: 6px">
+          <sc-for list="{{beats}}" as="b" hint-placeholder-count="4">
+            <button type="button" onClick="{{b.pick}}" style="{{b.style}}">{{b.label}}</button>
+          </sc-for>
+        </div>
+        <div style="font-size: 12px; color: #5F5F5A">On each check-in it reviews its tickets, continues work, and reports up to its manager.</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 8px">
+        <div style="font-size: 12px; font-weight: 600; color: #5F5F5A; text-transform: uppercase; letter-spacing: 0.04em">What it may do</div>
+        <sc-for list="{{perms}}" as="p" hint-placeholder-count="5">
+          <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 0; border-bottom: 1px solid #EFEFEC">
+            <span style="font-size: 13px">{{p.label}}</span>
+            <div role="group" aria-label="{{p.label}}" style="display: flex; gap: 2px; background: #EFEFEC; border-radius: 8px; padding: 3px">
+              <sc-for list="{{p.opts}}" as="o" hint-placeholder-count="3">
+                <button type="button" onClick="{{o.pick}}" style="{{o.style}}">{{o.label}}</button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <div style="font-size: 12px; font-weight: 600; color: #5F5F5A; text-transform: uppercase; letter-spacing: 0.04em">Current tickets</div>
+        <sc-for list="{{sel.tickets}}" as="t" hint-placeholder-count="2">
+          <a href="Main.dc.html" style="font-size: 13px; text-decoration: none; color: #1C1C1A; border: 1px solid #E4E4DF; border-radius: 8px; padding: 8px 10px">{{t}}</a>
+        </sc-for>
+        <sc-if value="{{sel.noTickets}}" hint-placeholder-val="{{ false }}">
+          <div style="font-size: 13px; color: #5F5F5A">No tickets right now.</div>
+        </sc-if>
+      </div>
+
+      <div style="display: flex; gap: 8px; margin-top: auto">
+        <button type="button" onClick="{{togglePause}}" style="flex: 1; height: 44px; border: 1px solid #D6D6D0; border-radius: 10px; background: #FFFFFF; color: #1C1C1A; font-size: 14px">{{sel.pauseLabel}}</button>
+        <button type="button" style="flex: 1; height: 44px; border: 0; border-radius: 10px; background: #0E5A8A; color: #FFFFFF; font-size: 14px; font-weight: 600">Save changes</button>
+      </div>
+    </aside>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1600,"height":1000}}'>
+var AGENTS = {
+  cos:   { name: 'Chief of Staff', runtime: 'Claude', reports: 'You', status: 'working', heartbeat: '10 min', spent: 12.40, limit: 25,
+           job: 'Turns your requests into tickets, assigns each one to the right teammate, and chases anything blocked or overdue.', tickets: ['T-110 · Laptop warranty expiry report (routing)'] },
+  mkt:   { name: 'Service Desk Lead', runtime: 'Claude', reports: 'Chief of Staff', status: 'idle', heartbeat: '1 h', spent: 6.10, limit: 20,
+           job: 'Reviews work from the Comms writer, Researcher and Analyst before it reaches you. Sends it back if it misses the goal.', tickets: [] },
+  ops:   { name: 'Infrastructure Lead', runtime: 'Claude', reports: 'Chief of Staff', status: 'idle', heartbeat: '1 h', spent: 2.30, limit: 15,
+           job: 'Owns servers, endpoints and inventory work. Checks the Sysadmin assistant’s changes before they are final.', tickets: [] },
+  web:   { name: 'Automation engineer', runtime: 'Codex', reports: 'Chief of Staff', status: 'working', heartbeat: '15 min', spent: 8.90, limit: 30,
+           job: 'Writes and runs scripts (PowerShell, Ansible). Tests in staging and never changes production without your approval.', tickets: ['T-107 · Renew expiring SSL certificates'] },
+  writer:{ name: 'Comms writer', runtime: 'Claude', reports: 'Service Desk Lead', status: 'waiting', heartbeat: '1 h', spent: 5.10, limit: 15,
+           job: 'Drafts user notices, change announcements and KB articles in plain language.', tickets: ['T-102 · Draft maintenance notice for staff', 'T-108 · Write VPN setup KB article'] },
+  research:{ name: 'Researcher', runtime: 'Gemini', reports: 'Service Desk Lead', status: 'waiting', heartbeat: '30 min', spent: 3.20, limit: 10,
+           job: 'Researches vendors, CVEs and documentation, and always lists where each fact came from.', tickets: ['T-109 · Check new CVEs for our firewall'] },
+  analyst:{ name: 'Analyst', runtime: 'Claude', reports: 'Service Desk Lead', status: 'working', heartbeat: '30 min', spent: 1.90, limit: 15,
+           job: 'Turns ticket exports, logs and inventories into summaries and comparison tables.', tickets: ['T-101 · Summarise last week’s incidents', 'T-104 · Compare 3 backup solutions'] },
+  opsa:  { name: 'Sysadmin assistant', runtime: 'Claude', reports: 'Infrastructure Lead', status: 'blocked', heartbeat: '2 h', spent: 1.30, limit: 10,
+           job: 'Cleans inventories, organises runbooks and plans rollouts.', tickets: ['T-103 · Clean up asset inventory', 'T-105 · Plan Windows 11 rollout'] }
+};
+var STATUS = {
+  working: { text: 'Working', dot: '#0E5A8A' },
+  idle:    { text: 'Idle, next check-in soon', dot: '#8A8A85' },
+  waiting: { text: 'Waiting for you', dot: '#B45309' },
+  blocked: { text: 'Blocked', dot: '#9B1C1C' },
+  paused:  { text: 'Paused', dot: '#45453F' }
+};
+var PERMS = [
+  { key: 'read',  label: 'Read files in its ticket folder' },
+  { key: 'write', label: 'Edit files (snapshot first)' },
+  { key: 'email', label: 'Send emails' },
+  { key: 'web',   label: 'Change production systems' },
+  { key: 'money', label: 'Spend money' }
+];
+var DEFAULT_PERM = { read: 'Allow', write: 'Allow', email: 'Ask', web: 'Ask', money: 'Never' };
+var BEATS = ['15 min', '30 min', '1 h', '2 h'];
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { selected: 'writer', paused: {}, beat: {}, perm: {} };
+  }
+
+  renderVals() {
+    var self = this;
+    var st = this.state;
+
+    var node = function (key) {
+      var a = AGENTS[key];
+      var status = st.paused[key] ? 'paused' : a.status;
+      var pct = Math.min(100, Math.round(a.spent / a.limit * 100));
+      return {
+        name: a.name, runtime: a.runtime,
+        statusText: STATUS[status].text,
+        dotStyle: 'width:8px;height:8px;border-radius:50%;background:' + STATUS[status].dot,
+        heartbeat: 'Checks in every ' + (st.beat[key] || a.heartbeat),
+        budget: '$' + a.spent.toFixed(2) + ' / $' + a.limit,
+        barStyle: 'width:' + pct + '%;height:4px;border-radius:2px;background:' + (pct > 80 ? '#B45309' : '#0E5A8A'),
+        selected: st.selected === key,
+        pick: function () { self.setState({ selected: key }); }
+      };
+    };
+
+    var groups = [
+      { lead: 'mkt', kids: ['writer', 'research', 'analyst'], bar: 'margin-left:50%;width:calc(50% + 12px)' },
+      { lead: 'ops', kids: ['opsa'], bar: 'width:calc(100% + 48px)' },
+      { lead: 'web', kids: [], bar: 'margin-right:50%;width:calc(50% + 12px)' }
+    ].map(function (g) {
+      return {
+        lead: node(g.lead),
+        kids: g.kids.map(node),
+        hasKids: g.kids.length > 0,
+        barStyle: 'align-self:stretch;height:2px;background:#CFCFC8;' + g.bar
+      };
+    });
+
+    var key = st.selected;
+    var a = AGENTS[key];
+    var status = st.paused[key] ? 'paused' : a.status;
+    var pct = Math.min(100, Math.round(a.spent / a.limit * 100));
+    var curBeat = st.beat[key] || a.heartbeat;
+    var myPerm = Object.assign({}, DEFAULT_PERM, st.perm[key] || {});
+
+    var segStyle = function (on) {
+      return 'height:30px;padding:0 10px;border:0;border-radius:6px;font-size:12px;' + (on ? 'background:#FFFFFF;color:#1C1C1A;font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,0.08)' : 'background:transparent;color:#45453F');
+    };
+
+    return {
+      cos: node('cos'),
+      groups: groups,
+      sel: {
+        name: a.name, runtime: a.runtime, reports: a.reports, job: a.job,
+        statusText: STATUS[status].text,
+        dotStyle: 'width:10px;height:10px;border-radius:50%;background:' + STATUS[status].dot,
+        spent: a.spent.toFixed(2), limit: a.limit,
+        barStyle: 'width:' + pct + '%;height:8px;border-radius:4px;background:' + (pct > 80 ? '#B45309' : '#0E5A8A'),
+        tickets: a.tickets, noTickets: a.tickets.length === 0,
+        pauseLabel: st.paused[key] ? 'Resume agent' : 'Pause agent'
+      },
+      beats: BEATS.map(function (b) {
+        var on = b === curBeat;
+        return {
+          label: b,
+          style: 'height:36px;padding:0 12px;border-radius:999px;font-size:13px;' + (on ? 'border:1px solid #1C1C1A;background:#1C1C1A;color:#FFFFFF' : 'border:1px solid #D6D6D0;background:#FFFFFF;color:#1C1C1A'),
+          pick: function () { var bt = Object.assign({}, st.beat); bt[key] = b; self.setState({ beat: bt }); }
+        };
+      }),
+      perms: PERMS.map(function (p) {
+        return {
+          label: p.label,
+          opts: ['Allow', 'Ask', 'Never'].map(function (v) {
+            return {
+              label: v, style: segStyle(myPerm[p.key] === v),
+              pick: function () {
+                var all = Object.assign({}, st.perm);
+                var mine = Object.assign({}, all[key] || {});
+                mine[p.key] = v; all[key] = mine;
+                self.setState({ perm: all });
+              }
+            };
+          })
+        };
+      }),
+      togglePause: function () { var ps = Object.assign({}, st.paused); ps[key] = !ps[key]; self.setState({ paused: ps }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

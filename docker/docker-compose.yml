@@ -1,0 +1,43 @@
+# Sebeto in a container.
+#   mkdir -p secrets && openssl rand -hex 32 > secrets/sebeto_token.txt
+#   docker compose -f docker/docker-compose.yml up -d
+#   open http://localhost:7600/?token=<contents of secrets/sebeto_token.txt>
+# Fully offline models:  docker compose -f docker/docker-compose.yml --profile local-models up -d
+services:
+  sebeto:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      args:
+        INSTALL_CLAUDE: "false" # set to "true" to bundle the Claude Code CLI
+    image: ghcr.io/vincenzosomma/sebeto-oss:latest
+    restart: unless-stopped
+    ports:
+      # Put a TLS reverse proxy in front when exposing beyond this machine.
+      - "127.0.0.1:7600:7600"
+    environment:
+      SEBETO_TOKEN_FILE: /run/secrets/sebeto_token
+      SEBETO_MAX_PARALLEL: "3"
+      SEBETO_RUNTIMES: "mock,claude-cli,codex-cli,ollama,openai"
+      # With the local-models profile, the core reaches Ollama by its service name.
+      OLLAMA_HOST: "http://ollama:11434"
+      # ANTHROPIC_API_KEY: set via an env file or secret when using claude-cli
+    volumes:
+      - sebeto-data:/data
+      - ./workspace:/workspace
+    secrets: [sebeto_token]
+
+  ollama: # optional local models (profile: local-models)
+    image: ollama/ollama:latest
+    profiles: [local-models]
+    restart: unless-stopped
+    volumes:
+      - ollama:/root/.ollama
+
+volumes:
+  sebeto-data: {}
+  ollama: {}
+
+secrets:
+  sebeto_token:
+    file: ./secrets/sebeto_token.txt

@@ -1,0 +1,44 @@
+{
+  "receiver": "sebeto",
+  "status": "firing",
+  "orgId": 1,
+  "alerts": [
+    {
+      "status": "firing",
+      "labels": {
+        "alertname": "High CPU",
+        "grafana_folder": "Servers",
+        "instance": "srv-app03",
+        "severity": "warning"
+      },
+      "annotations": {
+        "summary": "CPU above 90% for 10 minutes"
+      },
+      "startsAt": "2026-11-12T08:00:00Z",
+      "endsAt": "0001-01-01T00:00:00Z",
+      "generatorURL": "https://grafana/alerting/grafana/x/view",
+      "fingerprint": "d4e5f60718293a4b",
+      "values": {
+        "B": 93.2
+      }
+    }
+  ],
+  "groupLabels": {
+    "alertname": "High CPU"
+  },
+  "commonLabels": {
+    "alertname": "High CPU",
+    "instance": "srv-app03",
+    "severity": "warning"
+  },
+  "commonAnnotations": {
+    "summary": "CPU above 90% for 10 minutes"
+  },
+  "externalURL": "https://grafana/",
+  "version": "1",
+  "groupKey": "{}/{}:{alertname=\"High CPU\"}",
+  "truncatedAlerts": 0,
+  "title": "[FIRING:1] High CPU Servers (srv-app03 warning)",
+  "state": "alerting",
+  "message": "**Firing**\n\nValue: B=93.2\nLabels:\n - alertname = High CPU\n - instance = srv-app03"
+}

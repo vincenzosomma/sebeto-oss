@@ -1,0 +1,53 @@
+{
+  "version": "4",
+  "groupKey": "{}/{severity=\"critical\"}:{alertname=\"InstanceDown\"}",
+  "truncatedAlerts": 0,
+  "status": "firing",
+  "receiver": "sebeto",
+  "groupLabels": {
+    "alertname": "InstanceDown"
+  },
+  "commonLabels": {
+    "alertname": "InstanceDown",
+    "job": "node",
+    "severity": "critical"
+  },
+  "commonAnnotations": {
+    "summary": "Instance is down"
+  },
+  "externalURL": "http://alertmanager:9093",
+  "alerts": [
+    {
+      "status": "firing",
+      "labels": {
+        "alertname": "InstanceDown",
+        "instance": "srv-web01:9100",
+        "job": "node",
+        "severity": "critical"
+      },
+      "annotations": {
+        "summary": "Instance is down",
+        "description": "srv-web01:9100 has been down for more than 5 minutes."
+      },
+      "startsAt": "2026-11-12T07:55:00Z",
+      "endsAt": "0001-01-01T00:00:00Z",
+      "generatorURL": "http://prometheus:9090/graph",
+      "fingerprint": "5b1a6a2c8f9e0d11"
+    },
+    {
+      "status": "firing",
+      "labels": {
+        "alertname": "InstanceDown",
+        "instance": "srv-web02:9100",
+        "job": "node",
+        "severity": "critical"
+      },
+      "annotations": {
+        "summary": "Instance is down"
+      },
+      "startsAt": "2026-11-12T07:56:00Z",
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "7c2b8d3e9fa01e22"
+    }
+  ]
+}

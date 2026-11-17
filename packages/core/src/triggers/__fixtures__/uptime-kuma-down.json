@@ -1,0 +1,19 @@
+{
+  "heartbeat": {
+    "monitorID": 7,
+    "status": 0,
+    "time": "2026-11-12 08:01:12.345",
+    "msg": "timeout of 48000ms exceeded",
+    "important": true,
+    "duration": 60
+  },
+  "monitor": {
+    "id": 7,
+    "name": "Intranet portal",
+    "url": "https://intranet.corp.local",
+    "hostname": null,
+    "port": null,
+    "type": "http"
+  },
+  "msg": "[Intranet portal] [Down] timeout of 48000ms exceeded"
+}

@@ -1,0 +1,186 @@
+name: CI
+
+# Free plan: 2000 Actions minutes/month (Windows counts x2, macOS x10) and 0.5 GB storage.
+# A normal push runs only the Linux jobs (tests + Docker image). The Windows tests and the three
+# installers run for a manual run (Actions tab → CI → Run workflow) or a v* tag.
+# Docs-only changes do not run CI.
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+    paths-ignore: ["docs/**", "**/*.md"]
+  pull_request:
+    paths-ignore: ["docs/**", "**/*.md"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ${{ fromJSON((github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')) && '["ubuntu-latest","windows-latest"]' || '["ubuntu-latest"]') }}
+    env:
+      ELECTRON_SKIP_BINARY_DOWNLOAD: "1"
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build -w @sebeto/shared
+      - run: npm run typecheck
+      - run: npx vitest run
+      - run: npm run build -w @sebeto/ui
+
+  windows-installer:
+    name: Windows installer
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')
+    runs-on: windows-latest
+    env:
+      # electron-builder downloads its own Electron for packaging; no binary needed for npm ci.
+      ELECTRON_SKIP_BINARY_DOWNLOAD: "1"
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      # Builds the workspace, stages the app (better-sqlite3 rebuilt for Electron inside
+      # apps/desktop/stage only) and runs electron-builder. Unsigned: no certificate is configured,
+      # so Windows SmartScreen warns on first run. Nothing is published.
+      - run: npm run dist -w @sebeto/desktop
+      - name: Check the workspace's better-sqlite3 is still on Node's ABI
+        run: node -e "new (require('better-sqlite3'))(':memory:').close()"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: sebeto-windows-installer
+          path: apps/desktop/release/Sebeto-Setup-*.exe
+          if-no-files-found: error
+          retention-days: 3
+
+  linux-packages:
+    name: Linux packages
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    env:
+      ELECTRON_SKIP_BINARY_DOWNLOAD: "1"
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      # AppImage + .deb (x64), unsigned. Same staging as Windows; nothing is published.
+      - run: npm run dist -w @sebeto/desktop
+      - name: Check the workspace's better-sqlite3 is still on Node's ABI
+        run: node -e "new (require('better-sqlite3'))(':memory:').close()"
+      - name: Inspect the .deb
+        run: |
+          dpkg-deb --info apps/desktop/release/sebeto_*_amd64.deb
+          dpkg-deb --contents apps/desktop/release/sebeto_*_amd64.deb | grep -E 'opt/Sebeto/sebeto$|better_sqlite3\.node|resources/ui/index\.html'
+      - name: "Smoke test: packaged core (Electron as Node, Electron-ABI better-sqlite3)"
+        run: |
+          app=apps/desktop/release/linux-unpacked
+          SEBETO_UI_DIR="$PWD/$app/resources/ui" ELECTRON_RUN_AS_NODE=1 \
+            apps/desktop/scripts/smoke-health.sh core "$app/sebeto" "$app/resources/app.asar/node_modules/@sebeto/core/dist/main.js"
+      - name: "Smoke test: AppImage (whole app under Xvfb)"
+        run: |
+          command -v Xvfb || { sudo apt-get update && sudo apt-get install -y xvfb; }
+          Xvfb :99 -screen 0 1280x1024x24 >/dev/null 2>&1 &
+          until [ -e /tmp/.X11-unix/X99 ]; do sleep 0.2; done
+          export DISPLAY=:99
+          appimage=$(ls apps/desktop/release/Sebeto-*-x86_64.AppImage)
+          chmod +x "$appimage"
+          # No FUSE on the runner: extract-and-run. Ubuntu 24.04 restricts the Chromium sandbox
+          # for AppImages (no AppArmor profile), hence --no-sandbox.
+          APPIMAGE_EXTRACT_AND_RUN=1 apps/desktop/scripts/smoke-health.sh appimage "$appimage" --no-sandbox
+      - name: "Smoke test: installed .deb (whole app under Xvfb)"
+        run: |
+          sudo apt-get install -y ./apps/desktop/release/sebeto_*_amd64.deb
+          Xvfb :98 -screen 0 1280x1024x24 >/dev/null 2>&1 &
+          until [ -e /tmp/.X11-unix/X98 ]; do sleep 0.2; done
+          export DISPLAY=:98
+          apps/desktop/scripts/smoke-health.sh deb /opt/Sebeto/sebeto
+      - uses: actions/upload-artifact@v7
+        with:
+          name: sebeto-linux-packages
+          path: |
+            apps/desktop/release/Sebeto-*.AppImage
+            apps/desktop/release/sebeto_*.deb
+          if-no-files-found: error
+          retention-days: 3
+
+  macos-package:
+    name: macOS package
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')
+    runs-on: macos-latest
+    env:
+      ELECTRON_SKIP_BINARY_DOWNLOAD: "1"
+      # No Developer ID certificate: don't search the keychain (the app is ad-hoc signed).
+      CSC_IDENTITY_AUTO_DISCOVERY: "false"
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      # Two .dmg files (arm64 + x64), ad-hoc signed, not notarized. Nothing is published.
+      - run: npm run dist -w @sebeto/desktop
+      - name: Check the workspace's better-sqlite3 is still on Node's ABI
+        run: node -e "new (require('better-sqlite3'))(':memory:').close()"
+      - name: Inspect the apps
+        run: |
+          for app in apps/desktop/release/mac-arm64/Sebeto.app apps/desktop/release/mac/Sebeto.app; do
+            echo "== $app"
+            lipo -archs "$app/Contents/MacOS/Sebeto"
+            lipo -archs "$app/Contents/Resources/app.asar.unpacked/node_modules/better-sqlite3/build/Release/better_sqlite3.node"
+            ls -l "$app/Contents/Resources/icon.icns"
+            codesign --verify --deep --strict --verbose=2 "$app"
+          done
+      - name: "Smoke test: packaged core (Electron as Node, arm64)"
+        run: |
+          app=apps/desktop/release/mac-arm64/Sebeto.app/Contents
+          SEBETO_UI_DIR="$PWD/$app/Resources/ui" ELECTRON_RUN_AS_NODE=1 \
+            apps/desktop/scripts/smoke-health.sh core-arm64 "$app/MacOS/Sebeto" "$app/Resources/app.asar/node_modules/@sebeto/core/dist/main.js"
+      - name: "Smoke test: whole app (arm64)"
+        run: apps/desktop/scripts/smoke-health.sh app-arm64 apps/desktop/release/mac-arm64/Sebeto.app/Contents/MacOS/Sebeto
+      - name: "Smoke test: packaged core (Electron as Node, x64 under Rosetta, if available)"
+        run: |
+          if ! arch -x86_64 /usr/bin/true 2>/dev/null; then echo "Rosetta not available on this runner: skipped"; exit 0; fi
+          app=apps/desktop/release/mac/Sebeto.app/Contents
+          SEBETO_UI_DIR="$PWD/$app/Resources/ui" ELECTRON_RUN_AS_NODE=1 \
+            apps/desktop/scripts/smoke-health.sh core-x64 "$app/MacOS/Sebeto" "$app/Resources/app.asar/node_modules/@sebeto/core/dist/main.js"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: sebeto-macos-dmg
+          path: apps/desktop/release/Sebeto-*.dmg
+          if-no-files-found: error
+          retention-days: 3
+
+  docker:
+    name: Docker image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: docker/Dockerfile
+          push: false
+          tags: sebeto:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

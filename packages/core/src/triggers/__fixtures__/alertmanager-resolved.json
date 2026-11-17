@@ -1,0 +1,33 @@
+{
+  "version": "4",
+  "groupKey": "{}/{severity=\"critical\"}:{alertname=\"InstanceDown\"}",
+  "status": "resolved",
+  "receiver": "sebeto",
+  "groupLabels": {
+    "alertname": "InstanceDown"
+  },
+  "commonLabels": {
+    "alertname": "InstanceDown",
+    "job": "node",
+    "severity": "critical"
+  },
+  "commonAnnotations": {
+    "summary": "Instance is down"
+  },
+  "alerts": [
+    {
+      "status": "resolved",
+      "labels": {
+        "alertname": "InstanceDown",
+        "instance": "srv-web01:9100",
+        "severity": "critical"
+      },
+      "annotations": {
+        "summary": "Instance is down"
+      },
+      "startsAt": "2026-11-12T07:55:00Z",
+      "endsAt": "2026-11-12T08:20:00Z",
+      "fingerprint": "5b1a6a2c8f9e0d11"
+    }
+  ]
+}
