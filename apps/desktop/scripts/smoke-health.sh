@@ -17,6 +17,9 @@ export SEBETO_WORKSPACE="$work/workspace"
 export SEBETO_RUNTIMES=mock
 export SEBETO_HOST=127.0.0.1
 export SEBETO_PORT=0 # random free port (the desktop app sets this itself)
+# Seconds to wait for the core. The first launch under Rosetta (x64 on Apple silicon) translates
+# the whole app first, which takes over a minute on CI runners.
+timeout_s="${SMOKE_TIMEOUT_S:-60}"
 
 echo "smoke[$label]: $*"
 # Job control: the command gets its own process group, so stop() also ends whatever it spawned
@@ -41,13 +44,13 @@ fail() {
 }
 
 ready=""
-for _ in $(seq 1 120); do
+for _ in $(seq 1 $((timeout_s * 2))); do
   ready="$(grep -m1 -o 'SEBETO_READY {.*}' "$log" || true)"
   [ -n "$ready" ] && break
   kill -0 "$pid" 2>/dev/null || fail "process exited before the core was ready"
   sleep 0.5
 done
-[ -n "$ready" ] || fail "no SEBETO_READY line within 60 s"
+[ -n "$ready" ] || fail "no SEBETO_READY line within ${timeout_s} s"
 
 json="${ready#SEBETO_READY }"
 port="$(printf '%s' "$json" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>console.log(JSON.parse(s).port))')"
