@@ -161,7 +161,7 @@ jobs:
         run: |
           if ! arch -x86_64 /usr/bin/true 2>/dev/null; then echo "Rosetta not available on this runner: skipped"; exit 0; fi
           app=apps/desktop/release/mac/Sebeto.app/Contents
-          SEBETO_UI_DIR="$PWD/$app/Resources/ui" ELECTRON_RUN_AS_NODE=1 \
+          SMOKE_TIMEOUT_S=240 SEBETO_UI_DIR="$PWD/$app/Resources/ui" ELECTRON_RUN_AS_NODE=1 \
             apps/desktop/scripts/smoke-health.sh core-x64 "$app/MacOS/Sebeto" "$app/Resources/app.asar/node_modules/@sebeto/core/dist/main.js"
       - uses: actions/upload-artifact@v7
         with:
