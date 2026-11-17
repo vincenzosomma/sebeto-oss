@@ -16,7 +16,7 @@ created: 2026-11-08
 - [x] **`mock` adapter** (fake agent for development and tests, no tokens)
 - [x] `RuntimeAdapter` interface + the first real adapter: **`claude` CLI** (headless, stream-json, `--session-id` / `--resume`), with chat per ticket ([09 Runtimes & Sessions](09%20Runtimes%20%26%20Sessions.md))
 - [x] Settings → Models: detect installed runtimes; pick a runtime and model per agent and per ticket
-- [ ] (moved to v0.2) Ollama adapter
+- [x] Ollama adapter (moved to v0.2)
 - [x] Automatic status from agent events
 - [x] Per-ticket sandbox folder
 
@@ -34,14 +34,14 @@ created: 2026-11-08
 - [x] Snapshots + Undo
 
 ## v0.3
-- [ ] **Agents & skills page:** hierarchy editor, create agents, skill editor and library, team templates (Presepi)
-- [ ] **Container mode:** Dockerfile (core + UI + agent CLIs), login, secrets from env, `/data` and `/workspace` volumes, docker-compose with optional Ollama, image on GHCR ([14 Deployment Modes](14%20Deployment%20Modes.md))
-- [ ] Agents team: org chart, roles, heartbeats, budgets with hard stop
+- [x] **Agents & skills page:** hierarchy editor, create agents, skill editor and library, team templates
+- [x] **Container mode:** Dockerfile (core + UI + agent CLIs), login, secrets from env, `/data` and `/workspace` volumes, docker-compose with optional Ollama; built by CI (publishing the image on GHCR is still to do) ([14 Deployment Modes](14%20Deployment%20Modes.md))
+- [x] Agents team: org chart, roles, budgets that stop or only warn (heartbeats still to do)
 - [~] More adapters: **Codex CLI done** (2026-11-15, subscription login, MCP-wired, verified — [35 Codex CLI runtime](35%20Codex%20CLI%20runtime.md)); Gemini CLI deferred (deprecated for the owner's tier, replaced by Antigravity CLI 2026-06-18 — revisit via Antigravity). OpenAI-compatible APIs done in v0.7 R
-- [ ] Migrate Claude to the **Agent SDK** adapter (native Ask flow via `canUseTool`); keep the CLI adapter as an option
-- [ ] Ticket dependencies, templates, cost caps
+- (moved to Next) Migrate Claude to the **Agent SDK** adapter (native Ask flow via `canUseTool`); keep the CLI adapter as an option
+- [x] Ticket templates and cost caps (ticket dependencies still to do)
 - [~] **Agent communication:** Board MCP server (delegate, handoff, ask, review, report), sub-tickets, guardrails (hop limit, loop detection, org-chart routing) → [10 Agent Communication](10%20Agent%20Communication.md). **v1 delegation + UI view done** (2026-11-15, `feat/agent-comms`): `read_ticket` + `delegate` tools, `ticket.create` permission, org-chart + hop-limit guardrails, parent waits for children, and a Delegation section on the ticket panel (parent link + delegated children with status) ([34 Agent communication (delegation) v1](34%20Agent%20communication%20(delegation)%20v1.md)). Next: board grouping; ask/handoff/review; loop detection; cost-to-sender
-- [ ] Durable job queue + crash-safe resume; shared team notes
+- (moved to Next) Durable job queue + crash-safe resume; shared team notes
 
 ## v0.4: security-first operations (planned 2026-11-12)
 - [x] **A. Session library + agent memory:** every session (Sebeto tickets and Claude Code sessions found on this computer) listed, sorted by category, openable as a ticket; agents search it with `search_memory` / `read_memory` (permission `memory.read`)
@@ -50,15 +50,6 @@ created: 2026-11-08
 - [x] **D. Triggers:** webhook/alert (Alertmanager, Grafana, Uptime Kuma, Zabbix), mail rules, scheduled tasks; dedupe; untrusted origin (A–D done 2026-11-13)
 - [x] **E. Memory graph:** Obsidian-compatible memory vault with `[[links]]`, automatic notes, `memory_related`, graph view (done 2026-11-13)
 - [x] **F. AI per team + lock** (Red Team only on local Ollama) and **G. written scope before starting** (done 2026-11-13)
-
-## v1.0
-- [ ] Semantic search
-- [ ] Output previews
-- [ ] Team templates (import/export org charts)
-- [ ] Optional **self-hosted** sync server for teams (run by the team, never by us); mobile companion for approvals over the local network
-- [x] Workspace export/import (backup, moving machines): v0.7 Q
-- [ ] Code signing (macOS notarisation, Windows signing)
-- [ ] Public open-source release
 
 ## v0.5: hardening and insight (planned 2026-11-13)
 - [x] **H. Dependency security:** clear the open Dependabot alerts (Electron, zod, @fastify/static, vitest, …)
@@ -96,7 +87,24 @@ created: 2026-11-08
 - [x] **AG. Slack rules through the owner's Claude Slack connector** (no Slack app)
 - [x] **AH. Budgets stop or only warn** (`budgetBlocks`), **sub-tickets by hand**
 - [x] **AJ. Claude connectors per team and for all agents** (DB v15 `teams.claude_connectors`, `settings.claudeConnectorsAllAgents`); **agents can ask** for one with `request_claude_connector` → card *Turn on for the agent / for the team / Deny* ([38 Claude Connectors for Agents](38%20Claude%20Connectors%20for%20Agents.md), 2026-11-17)
-- [ ] Forwarding DMs to a triage bot (Slack refuses it); Jira Automation relay for tickets raised outside Slack
+- (moved to Next) Forwarding DMs to a triage bot (Slack refuses it); Jira Automation relay for tickets raised outside Slack
 - [x] **AC. Team files keep several teams** (whole-workspace export → import rebuilds every team)
 - [x] **AD. `~/.sebeto/sebeto.env`** for `npm start` settings (fixed token, pivot advisor)
 
+## Next (after v0.9.0)
+- [ ] Publish the Docker image on GHCR
+- [ ] Migrate Claude to the **Agent SDK** adapter (native Ask flow via `canUseTool`); keep the CLI adapter as an option
+- [ ] Agent communication: board grouping; ask, handoff and review; loop detection; cost to the sender
+- [ ] Ticket dependencies; agent heartbeats
+- [ ] Durable job queue with crash-safe resume; shared team notes
+- [ ] Gemini through the Antigravity CLI
+- [ ] Forwarding Slack DMs to a triage bot; Jira Automation relay for tickets raised outside Slack
+
+## v1.0
+- [ ] Semantic search
+- [ ] Output previews
+- [x] Team templates (import/export org charts): v0.9 AC
+- [ ] Optional **self-hosted** sync server for teams (run by the team, never by us); mobile companion for approvals over the local network
+- [x] Workspace export/import (backup, moving machines): v0.7 Q
+- [ ] Code signing (macOS notarisation, Windows signing)
+- [ ] Public open-source release (first public preview: v0.9.0)

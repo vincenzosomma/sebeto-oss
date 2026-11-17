@@ -305,7 +305,7 @@ function ClaudeConnectorsBlock({ selected, onChange, team }: { selected: string[
       <p className="small muted">{t('ag.claudeConn.hint')}</p>
       <label className="field">
         <span className="field__label">{t('ag.claudeConn.lookups')}</span>
-        <textarea className="input textarea" rows={3} value={lookups} onChange={(e) => { setLookups(e.target.value); setLookupNote(null); }} placeholder="quality_projects" spellCheck={false} />
+        <textarea className="input textarea" rows={3} value={lookups} onChange={(e) => { setLookups(e.target.value); setLookupNote(null); }} placeholder="tracker_projects" spellCheck={false} />
         <span className="small muted">{t('ag.claudeConn.lookupsHint')}</span>
       </label>
       <span className="row">

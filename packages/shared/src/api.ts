@@ -229,7 +229,7 @@ export interface AppSettings {
    */
   claudeConnectorsAllAgents?: string[];
   /**
-   * Connector tools the owner marked as look-ups (exact tool names, e.g. "quality_projects"): asked
+   * Connector tools the owner marked as look-ups (exact tool names, e.g. "tracker_projects"): asked
    * once per ticket like other look-ups, even though their name has no look-up word. Absent = none.
    */
   claudeLookupTools?: string[];
