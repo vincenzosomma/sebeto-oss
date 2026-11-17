@@ -5,7 +5,7 @@ created: 2026-11-08
 
 # Agents & skills
 
-A page where the user sees the **agent hierarchy**, **creates agents**, and **assigns skills** to them. In the mockup it's the **Agents & skills** artboard: https://claude.ai/artifact/H2rQHeAMNv4hD9aWGxrrhy
+A page where the user sees the **agent hierarchy**, **creates agents**, and **assigns skills** to them.
 
 ## Status (2026-11-10): v1 built
 - **Built:**

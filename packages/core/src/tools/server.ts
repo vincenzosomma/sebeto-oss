@@ -115,7 +115,7 @@ export function toolWords(tool: string): string[] {
 
 /**
  * A look-up when its name has a look-up word and no change word. Anything else, including names
- * with no verb at all ("quality_projects"), counts as a change: when unsure, ask every time.
+ * with no verb at all ("tracker_projects"), counts as a change: when unsure, ask every time.
  */
 export function isLookupTool(tool: string): boolean {
   const words = toolWords(tool);

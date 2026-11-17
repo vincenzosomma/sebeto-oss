@@ -53,23 +53,23 @@ describe("the owner's Claude connectors", () => {
     const { isLookupTool } = await import('../tools/server.js');
     // Look-ups, including prefixed and verb-less status/info names (T-15).
     for (const t of ['notion-get-self', 'getJiraIssue', 'atlassianUserInfo', 'getAccessibleAtlassianResources', 'slack_read_thread',
-      'slack_search_channels', 'enrolment_status', 'guide', 'list_labels', 'get-tags', 'download_gmail_attachment', 'query-data-sources',
+      'slack_search_channels', 'connection_status', 'guide', 'list_labels', 'get-tags', 'download_gmail_attachment', 'query-data-sources',
       'list_certified_queries', 'get_resource_guide']) expect([t, isLookupTool(t)]).toEqual([t, true]);
     // Changes, or unsure (no verb): asked every time.
     for (const t of ['notion-create-pages', 'addCommentToJiraIssue', 'transitionJiraIssue', 'slack_send_message', 'send_message',
-      'erase-device', 'execute_zapier_read_action', 'quality_projects', 'quality_issue_transition', 'export-device-data',
+      'erase-device', 'execute_zapier_read_action', 'tracker_projects', 'tracker_issue_transition', 'export-device-data',
       'update_values', 'create_draft', 'scan_package', 'docs_draft_create', 'memory-store', 'mark_invoice_paid', 'generate_summary',
       'list_and_delete', 'get-device-export', 'resolveIssue', 'check_and_fix']) expect([t, isLookupTool(t)]).toEqual([t, false]);
   });
 
   it("the owner's look-up list turns a verb-less tool into a look-up, exact names only", () => {
-    const allowed = ['claude.ai Quality MCP'];
-    expect(claudeToolDecision('mcp__claude_ai_Quality_MCP__quality_projects', allowed)).toMatchObject({ level: 'change' });
-    expect(claudeToolDecision('mcp__claude_ai_Quality_MCP__quality_projects', allowed, ['quality_projects'])).toMatchObject({ level: 'read' });
-    expect(claudeToolDecision('mcp__claude_ai_Quality_MCP__quality_issue_transition', allowed, ['quality_projects'])).toMatchObject({ level: 'change' });
+    const allowed = ['claude.ai Tracker MCP'];
+    expect(claudeToolDecision('mcp__claude_ai_Tracker_MCP__tracker_projects', allowed)).toMatchObject({ level: 'change' });
+    expect(claudeToolDecision('mcp__claude_ai_Tracker_MCP__tracker_projects', allowed, ['tracker_projects'])).toMatchObject({ level: 'read' });
+    expect(claudeToolDecision('mcp__claude_ai_Tracker_MCP__tracker_issue_transition', allowed, ['tracker_projects'])).toMatchObject({ level: 'change' });
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sebeto-lk-'));
     const store = createSettingsStore(dir);
-    expect(store.update({ claudeLookupTools: [' quality_projects ', 'quality_projects', 'quality_measures'] }).claudeLookupTools).toEqual(['quality_projects', 'quality_measures']);
+    expect(store.update({ claudeLookupTools: [' tracker_projects ', 'tracker_projects', 'tracker_measures'] }).claudeLookupTools).toEqual(['tracker_projects', 'tracker_measures']);
     expect(() => store.update({ claudeLookupTools: ['bad name!'] })).toThrow();
     fs.rmSync(dir, { recursive: true, force: true });
   });

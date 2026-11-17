@@ -310,16 +310,16 @@ describe('Slack channel rules', () => {
     const start = Number(h.ctx.repos.triggers!.get(trigger.id)!.state.cursor);
     const a = (start + 10).toFixed(6);
     const b = (start + 20).toFixed(6);
-    messages.push({ ts: a, user: 'UANN0001', text: 'Could I get admin access to install Python 3.12?' }, { ts: b, user: 'UBOB0001', text: 'thanks all!' });
+    messages.push({ ts: a, user: 'UANN0001', text: 'Could I get a second monitor?' }, { ts: b, user: 'UBOB0001', text: 'thanks all!' });
     // 1 minute later: no Assist reply yet → nothing, and the cursor stays before the first post.
     await engine.pollSlack(new Date((start + 70) * 1000));
     expect(tickets()).toHaveLength(0);
     expect(h.ctx.repos.triggers!.get(trigger.id)!.state.cursor).toBe(start.toFixed(6));
     // Assist replies on the first post only.
-    replies[a] = [{ ts: (start + 15).toFixed(6), bot_id: 'BASSIST1', text: '_*[<https://acme.atlassian.net/servicedesk/customer/portal/72/HELP-600|HELP-600>] Could I get admin access*_' }];
+    replies[a] = [{ ts: (start + 15).toFixed(6), bot_id: 'BASSIST1', text: '_*[<https://acme.atlassian.net/servicedesk/customer/portal/1/HELP-201|HELP-201>] Could I get a second monitor*_' }];
     await engine.pollSlack(new Date((start + 140) * 1000));
-    expect(tickets().map((t) => t.title)).toEqual(['HELP-600: Could I get admin access to install Python 3.12?']);
-    expect(tickets()[0]!.goal).toContain('Ticket HELP-600 (https://acme.atlassian.net/servicedesk/customer/portal/72/HELP-600) from Ann Lee.');
+    expect(tickets().map((t) => t.title)).toEqual(['HELP-201: Could I get a second monitor?']);
+    expect(tickets()[0]!.goal).toContain('Ticket HELP-201 (https://acme.atlassian.net/servicedesk/customer/portal/1/HELP-201) from Ann Lee.');
     // The second post never gets a ticket: skipped once the 10 minutes are over.
     await engine.pollSlack(new Date((start + 20 + 11 * 60) * 1000));
     expect(tickets()).toHaveLength(1);
@@ -355,8 +355,8 @@ describe('Slack channel rules: wait for the ticket number (Jira Assist)', () => 
     expect(ticketKeyFromThread([
       { ts: '1.0', user: 'UANN0001', text: 'help' },
       { ts: '1.1', user: 'UBOB0001', text: 'about HELP-1 maybe' },
-      { ts: '1.2', bot_id: 'BASSIST1', text: '_*[<https://acme.atlassian.net/servicedesk/customer/portal/72/HELP-583|HELP-583>] Hi, could i get admin access*_' },
-    ], '1.0')).toEqual({ key: 'HELP-583', url: 'https://acme.atlassian.net/servicedesk/customer/portal/72/HELP-583' });
+      { ts: '1.2', bot_id: 'BASSIST1', text: '_*[<https://acme.atlassian.net/servicedesk/customer/portal/1/HELP-202|HELP-202>] Hi, my keyboard stopped working*_' },
+    ], '1.0')).toEqual({ key: 'HELP-202', url: 'https://acme.atlassian.net/servicedesk/customer/portal/1/HELP-202' });
     expect(ticketKeyFromThread([{ ts: '1.0', user: 'U1', text: 'HELP-9' }], '1.0')).toBeNull();
   });
 });

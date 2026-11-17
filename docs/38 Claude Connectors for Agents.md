@@ -23,8 +23,8 @@ Google Drive… connected. Asking for separate API tokens per system in Sebeto w
     is a look-up when a word of its name (split on `_ - .` and camelCase) is a look-up word (get, list, read,
     search, find, query, fetch, view, download, status, info, guide, self…) and **no** word changes something
     (create, update, send, post, delete, transition, execute, export, scan, generate…). So `notion-get-self`,
-    `atlassianUserInfo` and `enrolment_status` are look-ups; `execute_zapier_read_action` is not. A name with no
-    verb (`quality_projects`) counts as a change: when unsure, ask every time. Found by the T-15 connector test;
+    `atlassianUserInfo` and `connection_status` are look-ups; `execute_zapier_read_action` is not. A name with no
+    verb (`tracker_projects`) counts as a change: when unsure, ask every time. Found by the T-15 connector test;
     the owner can list exact tool names that only read under *Tools that only look things up* (agent page,
     workspace setting `claudeLookupTools`) and they are then asked once per ticket like other look-ups;
   - everything else (comment, transition, post, create, update) → `tool.change`, asked **every time**, showing the tool and its arguments;
@@ -85,7 +85,7 @@ available: every call still goes through the gate as described above.
 - Only for agents on Claude Code (Codex/Ollama/OpenAI-compatible agents don't have the owner's Claude connectors).
 
 ## Verified 2026-11-16
-- Headless `claude -p` loads ~460 connector tools (Atlassian 41, Slack 27, Gmail 31, an MDM 134…).
+- Headless `claude -p` loads ~460 connector tools (Atlassian 41, Slack 27, Gmail 31, and more…).
 - Live run (test agent on Haiku, connector *claude.ai Atlassian – Acme*): Claude Code called
   `approve_tool`, Sebeto created *"Permission needed: look things up in claude.ai Atlassian – Acme"*
   and the ticket waited in Needs you. Approving is the owner's click (an assistant may not approve on

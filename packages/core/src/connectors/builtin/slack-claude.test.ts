@@ -2,9 +2,9 @@ import { describe, expect, it } from 'vitest';
 import { claudeReadArgs, claudeSlackCall, parseConnectorMessages, toolResultFromStream, type ClaudeExec } from './slack-claude.js';
 import { slackMessageText } from './slack.js';
 
-const CHANNEL = JSON.stringify({ messages: 'Channel: #security-alerts (C0SECALRT1)\n\n=== Message from EDR_Alert_Bot (B0EDRBOT01) at 2026-11-16 15:34:10 GMT === \nMessage TS: 1794843250.163159\n:large_yellow_circle: *EDR Alert – eBPF Program Loaded into Kernel*\n*Endpoint:* lab-01 (LINUX)\n\n> Detects eBPF\n\n=== Message from Sam <sam@example.com> (U0USER0001) at 2026-11-16 17:38:53 GMT ===\nMessage TS: 1794850733.982079\nBYOD HDMI cable in meeting room 2 doesnt seem to allow sharing to screen?\nThread: 3 replies (latest: 2026-11-16 17:41:35 GMT)\nReactions: ticket (1)', pagination_info: 'more' });
+const CHANNEL = JSON.stringify({ messages: 'Channel: #security-alerts (C0SECALRT1)\n\n=== Message from EDR_Alert_Bot (B0EDRBOT01) at 2026-11-16 15:34:10 GMT === \nMessage TS: 1794843250.163159\n:large_yellow_circle: *EDR Alert – eBPF Program Loaded into Kernel*\n*Endpoint:* lab-01 (LINUX)\n\n> Detects eBPF\n\n=== Message from Sam <sam@example.com> (U0USER0001) at 2026-11-16 17:38:53 GMT ===\nMessage TS: 1794850000.000100\nProjector in meeting room 2 shows no signal?\nThread: 3 replies (latest: 2026-11-16 17:41:35 GMT)\nReactions: ticket (1)', pagination_info: 'more' });
 
-const THREAD = JSON.stringify({ messages: '=== THREAD PARENT MESSAGE ===\nFrom: Sam <sam@example.com> (U0USER0001)\nTime: 2026-11-16 17:38:53 GMT\nMessage TS: 1794850733.982079\nBYOD HDMI cable?\nReactions: ticket (1)\n\n=== THREAD REPLIES (2 total) ===\n\n--- Reply 1 of 2 ---\nFrom: Assist <botuser-T-B09@slack-bots.com> (U0ASSIST01)\nTime: 2026-11-16 17:38:55 GMT\nMessage TS: 1794850735.010939\n*[<https://x.atlassian.net/servicedesk/customer/portal/72/HELP-589|HELP-589>] BYOD HDMI*\n\n--- Reply 2 of 2 ---\nFrom: Alex <alex@example.com> (U0OWNER001)\nTime: 2026-11-16 17:41:35 GMT\nMessage TS: 1794850895.719009\nThanks for flagging this.\n' });
+const THREAD = JSON.stringify({ messages: '=== THREAD PARENT MESSAGE ===\nFrom: Sam <sam@example.com> (U0USER0001)\nTime: 2026-11-16 17:38:53 GMT\nMessage TS: 1794850000.000100\nProjector shows no signal?\nReactions: ticket (1)\n\n=== THREAD REPLIES (2 total) ===\n\n--- Reply 1 of 2 ---\nFrom: Assist <botuser-T-B09@slack-bots.com> (U0ASSIST01)\nTime: 2026-11-16 17:38:55 GMT\nMessage TS: 1794850002.000200\n*[<https://x.atlassian.net/servicedesk/customer/portal/1/HELP-101|HELP-101>] Projector*\n\n--- Reply 2 of 2 ---\nFrom: Alex <alex@example.com> (U0OWNER001)\nTime: 2026-11-16 17:41:35 GMT\nMessage TS: 1794850162.000300\nThanks for flagging this.\n' });
 
 describe('Claude Slack connector output', () => {
   it('parses channel history: bots, people, multi-line text, thread counts; drops metadata lines', () => {
@@ -13,13 +13,13 @@ describe('Claude Slack connector output', () => {
     expect(m[0]).toMatchObject({ ts: '1794843250.163159', bot_id: 'B0EDRBOT01', username: 'EDR_Alert_Bot' });
     expect(slackMessageText(m[0]!)).toContain('*Endpoint:* lab-01 (LINUX)');
     expect(m[0]!.text).toContain('> Detects eBPF');
-    expect(m[1]).toMatchObject({ ts: '1794850733.982079', user: 'U0USER0001', username: 'Sam', reply_count: 3, text: 'BYOD HDMI cable in meeting room 2 doesnt seem to allow sharing to screen?' });
+    expect(m[1]).toMatchObject({ ts: '1794850000.000100', user: 'U0USER0001', username: 'Sam', reply_count: 3, text: 'Projector in meeting room 2 shows no signal?' });
   });
 
   it('parses a thread; app bot users count as bots', () => {
     const m = parseConnectorMessages(THREAD);
-    expect(m.map((x) => x.ts)).toEqual(['1794850733.982079', '1794850735.010939', '1794850895.719009']);
-    expect(m[0]!.text).toBe('BYOD HDMI cable?');
+    expect(m.map((x) => x.ts)).toEqual(['1794850000.000100', '1794850002.000200', '1794850162.000300']);
+    expect(m[0]!.text).toBe('Projector shows no signal?');
     expect(m[1]!.bot_id).toBe('U0ASSIST01');
     expect(m[2]).toMatchObject({ user: 'U0OWNER001', username: 'Alex' });
   });
@@ -60,7 +60,7 @@ describe('Claude Slack connector output', () => {
     const h = await call<{ messages: Array<{ ts: string }> }>('conversations.history', { channel: 'C0SECALRT1', oldest: '1794843000.000000', limit: 100 });
     expect(h.messages).toHaveLength(2);
     expect(prompts[0]).toContain('{"channel_id":"C0SECALRT1","limit":100,"oldest":"1794843000.000000"}');
-    const r = await call<{ messages: unknown[] }>('conversations.replies', { channel: 'C0HELPDSK1', ts: '1794850733.982079', limit: 20 });
+    const r = await call<{ messages: unknown[] }>('conversations.replies', { channel: 'C0HELPDSK1', ts: '1794850000.000100', limit: 20 });
     expect(r.messages).toHaveLength(3);
     expect((await call<{ user: { real_name: string } }>('users.info', { user: 'U0USER0001' })).user.real_name).toBe('Sam');
     await expect(call('chat.postMessage', {})).rejects.toThrow(/not available/);

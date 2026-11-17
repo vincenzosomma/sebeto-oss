@@ -164,7 +164,7 @@ const SEEDS: Seed[] = [
     log: ['Read the request', 'Classified: self_help, P3', 'Drafted the reply', 'Wants to post the reply in the #help-desk thread'],
     perm: {
       key: 'tool.change', title: 'Permission needed: claude.ai Slack: slack_send_message',
-      detail: 'Claude connector: claude.ai Slack\nTool: slack_send_message\n\n{\n  "channel_id": "C0HELP01",\n  "thread_ts": "1794850733.982079",\n  "message": "Hi Jane! Please try forgetting the network and joining again. If it still drops, reply here and we will check the access point in that room."\n}',
+      detail: 'Claude connector: claude.ai Slack\nTool: slack_send_message\n\n{\n  "channel_id": "C0HELP01",\n  "thread_ts": "1794850000.000100",\n  "message": "Hi Jane! Please try forgetting the network and joining again. If it still drops, reply here and we will check the access point in that room."\n}',
       provenance: 'Slack #help-desk (message from Jane Doe)',
     },
   },

@@ -69,7 +69,7 @@ export function mailMatches(cfg: MailTriggerConfig, m: MailSummary, since: Date,
 
 /**
  * The ticket key a ticketing app posted in the thread, e.g. Jira Service Management's
- * "[<https://…/HELP-583|HELP-583>] …". Only replies from apps/bots count. Exported for tests.
+ * "[<https://…/HELP-202|HELP-202>] …". Only replies from apps/bots count. Exported for tests.
  */
 export function ticketKeyFromThread(replies: SlackMessage[], parentTs: string): { key: string; url: string | null } | null {
   for (const r of replies) {

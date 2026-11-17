@@ -50,7 +50,7 @@ should it try instead"). So it became the advisor.
 | Model | Size | Caps | Role it can play |
 |---|---|---|---|
 | `qwen3-vl:4b-instruct` | 3.3 GB | completion, vision, **tools** | driver (fast, weak) |
-| `hf.co/bartowski/orcarouter_Qwen3.8-27B-Uncensored-GGUF:Q6_K` | 24 GB | **tools**, thinking, vision | driver (strong, slow) |
+| a 27B Qwen model (GGUF, Q6_K) | 24 GB | **tools**, thinking, vision | driver (strong, slow) |
 | `hf.co/fdtn-ai/Foundation-Sec-8B-Reasoning-Q8_0-GGUF` | 8.5 GB | thinking, completion | **advisor** (security reasoning) |
 
 ## Driver/advisor on a separate machine (2026-11-16)
