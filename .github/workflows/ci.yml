@@ -3,14 +3,14 @@ name: CI
 # Free plan: 2000 Actions minutes/month (Windows counts x2, macOS x10) and 0.5 GB storage.
 # A normal push runs only the Linux jobs (tests + Docker image). The Windows tests and the three
 # installers run for a manual run (Actions tab → CI → Run workflow) or a v* tag.
-# Docs-only changes do not run CI.
+# Docs-only pushes to main do not run CI. Pull requests always run it, because the
+# "Test (ubuntu-latest)" check is required to merge into main.
 on:
   push:
     branches: [main]
     tags: ["v*"]
     paths-ignore: ["docs/**", "**/*.md"]
   pull_request:
-    paths-ignore: ["docs/**", "**/*.md"]
   workflow_dispatch:
 
 permissions:
