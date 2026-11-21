@@ -3,6 +3,7 @@
  * screen (Gmail), "preset" ones are known MCP servers with a few fields, "custom" is your own
  * MCP server, and "planned" ones are listed so the owner sees what is coming.
  */
+import { looksLikeEmail } from '@sebeto/shared';
 import type { CatalogEntry, ConnectorSetting, ConnectorTransport } from '@sebeto/shared';
 import { SLACK_ENV, slackAppToken, slackToken } from './builtin/slack.js';
 
@@ -93,7 +94,7 @@ export function presetConfig(id: string, values: Record<string, string>): { tran
     case 'atlassian': {
       const site = normalizeAtlassianSite(v('site'));
       const email = v('email');
-      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error('Enter the email of the Atlassian account, or leave it empty for a service account key.');
+      if (email && !looksLikeEmail(email)) throw new Error('Enter the email of the Atlassian account, or leave it empty for a service account key.');
       if (!v('token')) throw new Error('Paste the Atlassian API token or service account key.');
       return {
         transport: { type: 'http', url: ATLASSIAN_MCP_URL },

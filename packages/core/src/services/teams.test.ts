@@ -163,6 +163,12 @@ describe('routing rules', () => {
     expect(keywords.find((k) => k.stem === 'outlook')!.weight).toBe(1);
     expect(keywords.find((k) => k.stem === 'password')!.weight).toBe(0.5);
     expect(phrases.map((p) => p.display)).toContain('password resets');
+    // "and / or / dash" separators, with any spacing (rewritten without \s+ on both sides).
+    const split = hintTerms('VPN  and   Wi-Fi; firewall or\tproxy - printers').keywords.map((k) => k.stem);
+    expect(split).toEqual(expect.arrayContaining(['vpn', 'wi', 'firewall', 'proxy', 'printer']));
+    const t0 = Date.now();
+    hintTerms(`a${' '.repeat(50_000)}b`);
+    expect(Date.now() - t0).toBeLessThan(500);
     expect(isConfident(3, 0)).toBe(true);
     expect(isConfident(2, 2)).toBe(false);
     expect(isConfident(2, 1)).toBe(false);

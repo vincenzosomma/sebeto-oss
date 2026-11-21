@@ -4,6 +4,7 @@
  * Claude Code agents can also look at images. The message that goes with them names the files and
  * says their content is data, not instructions.
  */
+import { trimChars } from '@sebeto/shared';
 import fs from 'node:fs';
 import path from 'node:path';
 import type { Id } from '@sebeto/shared';
@@ -36,7 +37,7 @@ const extOf = (name: string) => (/\.([A-Za-z0-9]{1,8})$/.exec(name)?.[1] ?? '').
 export function safeAttachmentName(raw: string): string {
   const base = path.basename(String(raw).replace(/\\/g, '/')).normalize('NFKD');
   const ext = extOf(base);
-  let stem = (ext ? base.slice(0, -(ext.length + 1)) : base).replace(/[^A-Za-z0-9._-]+/g, '-').replace(/^[.-]+|[.-]+$/g, '').slice(0, 80);
+  let stem = trimChars((ext ? base.slice(0, -(ext.length + 1)) : base).replace(/[^A-Za-z0-9._-]+/g, '-'), '.-').slice(0, 80);
   if (!stem) stem = 'file';
   return ext ? `${stem}.${ext}` : stem;
 }

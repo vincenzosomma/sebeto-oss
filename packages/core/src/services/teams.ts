@@ -3,7 +3,7 @@
  * A team has a name, a unique slug, a colour, a lead (always a member) and routing hints. Members
  * are the agents whose teamId points to it. Deleting a team keeps its agents and tickets (no team).
  */
-import { PROJECT_COLORS, type Agent, type CreateTeamBody, type Id, type RuntimeId, type SecuritySeverity, type Team, type TeamAiFields, type UpdateTeamBody } from '@sebeto/shared';
+import { PROJECT_COLORS, type Agent, type CreateTeamBody, type Id, type RuntimeId, type SecuritySeverity, type Team, type TeamAiFields, type UpdateTeamBody, trimChars, trimEndChars } from '@sebeto/shared';
 import type { AppContext, TeamRepo } from '../contracts.js';
 import { badRequest, conflict, notFound, unavailable } from './errors.js';
 
@@ -19,8 +19,8 @@ export function teamRepo(ctx: AppContext): TeamRepo {
 /** "Service Desk" → "service-desk" (letters and digits, accents removed). */
 export function slugifyTeam(name: string): string {
   const s = name.normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 50).replace(/-+$/, '');
-  return s || 'team';
+    .replace(/[^a-z0-9]+/g, '-');
+  return trimEndChars(trimChars(s, '-').slice(0, 50), '-') || 'team';
 }
 
 /** A slug that is free: base, base-2, base-3… */

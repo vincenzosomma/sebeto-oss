@@ -11,6 +11,7 @@
  *   - public IPv4 addresses                      -> <ip> (private / loopback ones stay)
  * It errs on the side of removing too much: a bug report never needs the secret itself.
  */
+import { trimEndChars } from '@sebeto/shared';
 import os from 'node:os';
 
 export interface RedactorOptions {
@@ -64,7 +65,7 @@ export function createRedactor(opts: RedactorOptions = {}): Redactor {
 
   // The home folder, with either slash style (C:\Users\x and C:/Users/x), any case on Windows-like paths.
   const homeRe = home && home.length > 3
-    ? new RegExp(escapeRe(home.replace(/[\\/]+$/, '')).replace(/\\\\|\//g, '[\\\\/]'), 'gi')
+    ? new RegExp(escapeRe(trimEndChars(home, '\\/')).replace(/\\\\|\//g, '[\\\\/]'), 'gi')
     : null;
   const userRe = user && user.length >= 3 ? new RegExp(`(?<![A-Za-z0-9])${escapeRe(user)}(?![A-Za-z0-9])`, 'gi') : null;
 

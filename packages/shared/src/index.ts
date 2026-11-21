@@ -16,3 +16,4 @@ export * from './backups.js';
 export * from './cron.js';
 export * from './ids.js';
 export * from './i18n.js';
+export * from './text.js';

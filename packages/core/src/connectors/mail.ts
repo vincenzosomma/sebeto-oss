@@ -9,6 +9,7 @@
  * - Everything read from a mailbox is untrusted content: the tool server tags it and forces outbound
  *   actions (sending email, commands) to ask afterwards.
  */
+import { looksLikeEmail } from '@sebeto/shared';
 import fs from 'node:fs';
 import path from 'node:path';
 import { ImapFlow } from 'imapflow';
@@ -66,7 +67,6 @@ export const GMAIL_SERVERS: MailServerSettings = { imapHost: 'imap.gmail.com', i
 export const MAIL_TEXT_MAX = 30_000;
 export const MAIL_SEARCH_MAX = 25;
 
-const EMAIL_RE = /^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/;
 const HOST_RE = /^[a-z0-9.-]{1,253}$/i;
 
 const addr = (a: AddressObject | AddressObject[] | undefined): string =>
@@ -256,7 +256,7 @@ export function createMailConnector(opts: {
     async connect(body) {
       if (isSignIn(body.provider)) throw new MailError('Use "Sign in" for this provider.', 'invalid');
       const address = body.address.trim().toLowerCase();
-      if (!EMAIL_RE.test(address)) throw new MailError('Enter a valid email address.', 'invalid');
+      if (!looksLikeEmail(address)) throw new MailError('Enter a valid email address.', 'invalid');
       // Google shows app passwords as "abcd efgh ijkl mnop"; the spaces are not part of it.
       const password = body.provider === 'gmail' ? body.password.replace(/\s+/g, '') : body.password;
       if (!password) throw new MailError('Enter the app password.', 'invalid');

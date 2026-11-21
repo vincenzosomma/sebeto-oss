@@ -87,8 +87,10 @@ function sendError(reply: FastifyReply, status: number, code: string, message: s
 export function bearerFrom(req: FastifyRequest): string | undefined {
   const h = req.headers.authorization;
   if (typeof h !== 'string') return undefined;
-  const m = /^Bearer\s+(.+)$/i.exec(h.trim());
-  return m?.[1]?.trim();
+  // No regex here: this runs before the token is checked, on any header (CodeQL polynomial-redos).
+  const s = h.trim();
+  if (s.length < 8 || s.slice(0, 6).toLowerCase() !== 'bearer' || !/\s/.test(s[6]!)) return undefined;
+  return s.slice(7).trim() || undefined;
 }
 
 function queryToken(req: FastifyRequest): string | undefined {

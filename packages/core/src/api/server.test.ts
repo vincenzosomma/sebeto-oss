@@ -348,6 +348,16 @@ describe('API server', () => {
       expect((await app.inject({ url: '/api/v1/health', headers: { authorization: 'Bearer nope' } })).statusCode).toBe(401);
       expect((await app.inject({ url: '/api/v1/health', headers: { authorization: TOKEN } })).statusCode).toBe(401);
       expect((await app.inject({ url: `/api/v1/health?token=${TOKEN}` })).statusCode).toBe(401);
+      expect((await app.inject({ url: '/api/v1/health', headers: { authorization: `Bearer${TOKEN}` } })).statusCode).toBe(401);
+      // A crafted header (CodeQL polynomial-redos) is refused quickly.
+      const t0 = Date.now();
+      expect((await app.inject({ url: '/api/v1/health', headers: { authorization: `bearer ${' '.repeat(8000)}x` } })).statusCode).toBe(401);
+      expect(Date.now() - t0).toBeLessThan(1000);
+    });
+
+    it('accepts the token with any case and spacing of "Bearer"', async () => {
+      expect((await app.inject({ url: '/api/v1/health', headers: { authorization: `bearer   ${TOKEN}  ` } })).statusCode).toBe(200);
+      expect((await app.inject({ url: '/api/v1/health', headers: { authorization: `BEARER\t${TOKEN}` } })).statusCode).toBe(200);
     });
 
     it('accepts the right token', async () => {
