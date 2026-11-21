@@ -4,6 +4,7 @@
  * hidden snapshot repo (to rewrite history / break Undo). Every tool path goes through
  * {@link resolveInside} before any fs call.
  */
+import { trimEndChars } from '@sebeto/shared';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -65,7 +66,7 @@ export async function resolveInside(folder: string, input: string): Promise<Reso
   if (unified.startsWith('/') || path.isAbsolute(raw) || path.win32.isAbsolute(raw)) {
     throw new PathError('Absolute paths are not allowed; use a path relative to the ticket folder.');
   }
-  const rel = path.posix.normalize(unified).replace(/\/+$/, '') || '.';
+  const rel = trimEndChars(path.posix.normalize(unified), '/') || '.';
   if (rel === '..' || rel.startsWith('../')) throw new PathError('That path is outside the ticket folder.');
   const reserved = rel.split('/').find((s) => RESERVED.has(s.toLowerCase()));
   if (reserved) throw new PathError(`"${reserved}" is reserved by Sebeto and cannot be accessed.`);

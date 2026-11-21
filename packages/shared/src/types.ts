@@ -3,6 +3,7 @@
  * See docs/05 Architecture.md and docs/15 Architecture Review.md.
  */
 
+import { trimChars } from './text.js';
 import type { TicketOrigin } from './triggers.js';
 
 export type Id = string; // UUIDv7, generated in the app (see ids.ts)
@@ -75,7 +76,7 @@ export interface Agent {
 
 /** Tool-name prefix Claude Code uses for an MCP server ("claude.ai Atlassian – Acme" → "claude_ai_Atlassian_Acme"). */
 export function claudeMcpSlug(serverName: string): string {
-  return serverName.replace(/[^A-Za-z0-9_-]+/g, '_').replace(/_+/g, '_').replace(/^_+|_+$/g, '');
+  return trimChars(serverName.replace(/[^A-Za-z0-9_-]+/g, '_').replace(/_+/g, '_'), '_');
 }
 
 export interface Ticket {

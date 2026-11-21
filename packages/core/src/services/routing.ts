@@ -203,7 +203,10 @@ interface Phrase { stems: string; display: string }
 export function hintTerms(hints: string): { keywords: Keyword[]; phrases: Phrase[] } {
   const keywords = new Map<string, Keyword>();
   const phrases: Phrase[] = [];
-  const parts = hints.split(/[,;\n()]|\s+(?:and|or|e|o)\s+|\s+[-–—]\s+/i).map((p) => p.trim()).filter(Boolean);
+  // Spaces are collapsed first so the "and / or / dash" split has no \s+ on both sides (CodeQL polynomial-redos).
+  const parts = hints.split(/[,;\n()]/)
+    .flatMap((seg) => `${seg.replace(/\s+/g, ' ')} `.split(/ (?:and|or|e|o) | [-–—] /i))
+    .map((p) => p.trim()).filter(Boolean);
   for (const part of parts) {
     for (const alt of part.split('/').map((p) => p.trim()).filter(Boolean)) {
       const raw = alt.split(/\s+/).filter(Boolean);

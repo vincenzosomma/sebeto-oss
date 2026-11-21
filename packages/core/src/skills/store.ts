@@ -9,7 +9,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { parseDocument, stringify } from 'yaml';
-import { PERMISSION_KEYS, type PermissionKey, type Skill, type SkillBody } from '@sebeto/shared';
+import { PERMISSION_KEYS, type PermissionKey, type Skill, type SkillBody, trimChars } from '@sebeto/shared';
 import { resolveInside } from '../tools/paths.js';
 
 export const SKILL_FILE = 'SKILL.md';
@@ -27,8 +27,8 @@ export class SkillError extends Error {
 
 /** "Incident summary (v2)!" → "incident-summary-v2". Exported for tests. */
 export function slugify(name: string): string {
-  return name.normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 63) || 'skill';
+  return trimChars(name.normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-'), '-').slice(0, 63) || 'skill';
 }
 
 interface Parsed { meta: Record<string, unknown>; body: string }
